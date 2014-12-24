@@ -22,7 +22,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity  android:name="com.zeng.yan.taskmanager.AddTaskActivity"></activity>
+        <activity android:name="com.zeng.yan.taskmanager.AddTaskActivity" >
+        </activity>
+        <activity
+            android:name="com.zeng.yan.taskmanager.DatePickerActivity"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name="com.zeng.yan.taskmanager.TimerPickerActivity"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,54 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:zengyan="http://schemas.android.com/apk/res/com.zeng.yan.taskmanager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
-    <EditText
-        android:id="@+id/et_taskcontent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:drawableLeft="@drawable/content"
-        android:hint="请输入待办事项..."
-        />
-
-    <Spinner
-        android:id="@+id/sp_cycle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <EditText
-        android:id="@+id/et_tastDate"
-        android:layout_width="match_parent"
+    <com.zeng.yan.taskmanager.ui.TitleBar
+          android:id="@+id/myTitleBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/date"
-        />
-
-    <EditText
-        android:id="@+id/et_startTimer"
+        zengyan:leftivVisable="true"
+        zengyan:leftivsrc="@drawable/back"
+        zengyan:rightivVisable="false"
+        zengyan:rightivsrc="@drawable/icon_add"
+        zengyan:titletext="增加事项" >
+    </com.zeng.yan.taskmanager.ui.TitleBar>
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/timer"
-        android:hint="开始时间" />
+        android:layout_height="match_parent" 
+            android:layout_margin="5dp"
+        >
 
-    <EditText
-        android:id="@+id/et_endTimer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/timer"
-        android:hint="结束时间" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-    </EditText>
+            <EditText
+                android:id="@+id/et_taskcontent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/content"
+                android:hint="请输入待办事项..." />
 
-    <Spinner
-        android:id="@+id/sp_reminder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp" >
 
-    <Button
-        android:id="@+id/btn_add"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="添加" />
+                <ImageView
+                    android:id="@+id/iv_rc"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/xuhuan" />
+
+                <Spinner
+                    android:id="@+id/sp_cycle"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_alignBottom="@id/iv_rc"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/iv_rc" 
+                     android:gravity="bottom"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp" >
+
+                <ImageView
+                    android:id="@+id/iv_1"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/date" />
+
+                <EditText
+                    android:id="@+id/et_tastDate"
+                    style="@style/task_add_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/iv_1"
+                    android:layout_toRightOf="@id/iv_1"
+                    android:text="2014-12-24" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp" >
+
+                <ImageView
+                    android:id="@+id/iv_2"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/timer" />
+
+                <EditText
+                    android:id="@+id/et_startTimer"
+                    style="@style/task_add_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/iv_2"
+                    android:layout_toRightOf="@id/iv_2"
+                    android:text="8:00" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp" >
+
+                <ImageView
+                    android:id="@+id/iv_3"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/timer" />
+
+                <EditText
+                    android:id="@+id/et_endTimer"
+                    style="@style/task_add_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/iv_3"
+                    android:layout_toRightOf="@id/iv_3"
+                    android:text="17:00" />
+            </RelativeLayout>
+
+     
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp" >
+
+                <ImageView
+                    android:id="@+id/iv_4"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/icon_affair_detail_alert" />
+
+                <Spinner
+                    android:id="@+id/sp_reminder"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_alignBottom="@id/iv_4"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/iv_4" 
+                    android:gravity="bottom"/>"
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_shape"
+                android:text="添    加" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
