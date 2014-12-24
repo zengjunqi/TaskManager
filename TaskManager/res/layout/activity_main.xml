@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zengyan="http://schemas.android.com/apk/res/com.zeng.yan.taskmanager"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <com.zeng.yan.taskmanager.ui.TitleBar
+          android:id="@+id/myTitleBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        zengyan:leftivVisable="true"
+        zengyan:leftivsrc="@drawable/ic_launcher"
+        zengyan:rightivVisable="true"
+        zengyan:rightivsrc="@drawable/icon_add"
+        zengyan:titletext="我的日程管理" >
+    </com.zeng.yan.taskmanager.ui.TitleBar>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <RadioGroup
+        android:id="@+id/main_radio"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:background="#40000000"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="2dp" >
+
+        <RadioButton
+            android:id="@+id/rb_home"
+            style="@style/main_tab_bottom"
+            android:drawableTop="@drawable/icon_function"
+            android:text="我" />
+
+        <RadioButton
+            android:id="@+id/rb_query"
+            style="@style/main_tab_bottom"
+            android:drawableTop="@drawable/icon_smartservice"
+            android:text="查询" />
+
+        <RadioButton
+            android:id="@+id/rb_setting"
+            style="@style/main_tab_bottom"
+            android:drawableTop="@drawable/icon_setting"
+            android:text="设置" />
+    </RadioGroup>
+
+</LinearLayout>

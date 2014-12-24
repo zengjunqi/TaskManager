@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/et_taskcontent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:drawableLeft="@drawable/content"
+        android:hint="请输入待办事项..."
+        />
+
+    <Spinner
+        android:id="@+id/sp_cycle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/et_tastDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/date"
+        />
+
+    <EditText
+        android:id="@+id/et_startTimer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/timer"
+        android:hint="开始时间" />
+
+    <EditText
+        android:id="@+id/et_endTimer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/timer"
+        android:hint="结束时间" >
+
+    </EditText>
+
+    <Spinner
+        android:id="@+id/sp_reminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="添加" />
+
+</LinearLayout>

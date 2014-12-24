@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+      <declare-styleable name="myTitleBar">
+        <attr name="titletext" format="string" />
+        <attr name="leftivsrc" format="reference" />
+        <attr name="rightivsrc" format="reference" />
+        <attr name="leftivVisable" format="boolean" />
+        <attr name="rightivVisable" format="boolean" />
+    </declare-styleable>
+
+</resources>
