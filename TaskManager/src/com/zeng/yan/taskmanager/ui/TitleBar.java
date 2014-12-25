@@ -40,6 +40,9 @@ public class TitleBar extends RelativeLayout {
 		super(context, attrs, defStyle);
 		iniView(context);
 	}
+	public void setTitle(String titleString) {
+		tv_title.setText(titleString);
+	}
 
 	public TitleBar(Context context, AttributeSet attrs) {
 		super(context, attrs);

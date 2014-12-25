@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -30,7 +31,9 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 	private String[] reminder = { "不提醒", "按时提醒", "提前5分钟", "提前10分钟", "提前15分钟",
 			"提前30分钟", "提前1小时" };
 	private TitleBar tBar;
-
+	private String oper;
+	TaskDBOperator dbOperator;
+	private int taskId;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -68,8 +71,31 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 				finish();
 			}
 		});
+		 dbOperator = new TaskDBOperator(getApplicationContext());
 		btnAdd = (Button) findViewById(R.id.btn_add);
 		btnAdd.setOnClickListener(this);
+		
+		Intent it=getIntent();
+		 oper=it.getStringExtra("oper");
+		 if ("update".equals(oper)) {
+			 taskId=it.getIntExtra("id", 0);
+			initTaskDetails(taskId);
+			btnAdd.setText("保存");
+			tBar.setTitle("修改事项");
+			Log.i("zeng", oper+"=="+taskId);
+		}
+		
+				
+	}
+
+	private void initTaskDetails(int id) {
+	 TaskDetails taskDetails=dbOperator.findTaskById(id);
+	 et_content.setText(taskDetails.getContent());
+	 et_date.setText(taskDetails.getDate());
+	 et_startTimer.setText(taskDetails.getStartTime());
+	 et_endTimer.setText(taskDetails.getEndTime());
+	 sp_cycle.setSelection(taskDetails.getCycle());
+	 sp_reminder.setSelection(taskDetails.getReminder());
 	}
 
 	/**
@@ -134,8 +160,15 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 				et_content.startAnimation(shake);
 			}else {
 				try {
-					createTask();
-					Toast.makeText(this, "添加成功!!!", Toast.LENGTH_SHORT).show();
+					TaskDetails task=getMyTask();
+					 if ("update".equals(oper)) {
+						 dbOperator.update(task);
+					 }
+					 else {
+						
+						 dbOperator.add(task);
+						 Toast.makeText(this, "添加成功!!!", Toast.LENGTH_SHORT).show();
+					}					 
 					finish();
 				} catch (Exception e) {
 					Toast.makeText(this, "添加失败!!!", Toast.LENGTH_SHORT).show();
@@ -147,8 +180,8 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private void createTask() {
-		TaskDBOperator dbOperator = new TaskDBOperator(getApplicationContext());
+	private TaskDetails getMyTask() {
+		
 		TaskDetails taskDetails = new TaskDetails();
 		taskDetails.setContent(et_content.getText().toString());
 		taskDetails.setCycle(sp_cycle.getSelectedItemPosition());
@@ -156,7 +189,12 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 		taskDetails.setEndTime(et_endTimer.getText().toString());
 		taskDetails.setReminder(sp_reminder.getSelectedItemPosition());
 		taskDetails.setStartTime(et_startTimer.getText().toString());
-		dbOperator.add(taskDetails);
+		 if ("update".equals(oper)) {
+			 taskDetails.set_id(taskId);
+			 
+		 }
+		return taskDetails;
+		
 	}
 
 	@Override

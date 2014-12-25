@@ -20,11 +20,11 @@ public class TaskDBOperator {
 		dbHelper = new TaskDBHelper(context);
 	}
 	
-	public List<TaskDetails> findPart(int offset,int maxno){
+	public List<TaskDetails> findPart(int offset,int maxno,String startDate,String endDate){
 
 		List<TaskDetails> result = new ArrayList<TaskDetails>();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		Cursor cursor = db.rawQuery("select * from mytasks order by _id desc limit ? offset ?", new String[]{String.valueOf(maxno),String.valueOf(offset)});
+		Cursor cursor = db.rawQuery("select * from mytasks where date>= ? and date<=? order by date desc limit ? offset ?", new String[]{String.valueOf(startDate),String.valueOf(endDate),String.valueOf(maxno),String.valueOf(offset)});
 		while(cursor.moveToNext()){
 			TaskDetails info = new TaskDetails();
 			

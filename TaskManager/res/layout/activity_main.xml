@@ -41,7 +41,7 @@
             android:id="@+id/rb_query"
             style="@style/main_tab_bottom"
             android:drawableTop="@drawable/icon_smartservice"
-            android:text="查询" />
+            android:text="记录" />
 
         <RadioButton
             android:id="@+id/rb_setting"

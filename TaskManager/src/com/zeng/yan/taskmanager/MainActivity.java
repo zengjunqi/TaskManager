@@ -58,8 +58,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		MainFragment tab1 = new MainFragment();
 		QueryFragment tab2 = new QueryFragment();
 		SetFragment tab3 = new SetFragment();
-		fragments.add(tab1);
+		
 		fragments.add(tab2);
+		fragments.add(tab1);
 		fragments.add(tab3);
 		fragmentPagerAdapter = new MyFragmentAdapter(
 				getSupportFragmentManager(), fragments);
