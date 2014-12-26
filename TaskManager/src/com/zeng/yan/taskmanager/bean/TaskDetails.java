@@ -8,6 +8,13 @@ public class TaskDetails {
 	private String startTime;
 	private String endTime;
 	private int reminder;
+	private String reminderDate;
+	public String getReminderDate() {
+		return reminderDate;
+	}
+	public void setReminderDate(String reminderDate) {
+		this.reminderDate = reminderDate;
+	}
 	public int get_id() {
 		return _id;
 	}

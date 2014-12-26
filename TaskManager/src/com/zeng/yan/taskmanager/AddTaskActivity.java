@@ -1,5 +1,7 @@
 package com.zeng.yan.taskmanager;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.app.Activity;
@@ -34,6 +36,7 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 	private String oper;
 	TaskDBOperator dbOperator;
 	private int taskId;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,31 +74,30 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 				finish();
 			}
 		});
-		 dbOperator = new TaskDBOperator(getApplicationContext());
+		dbOperator = new TaskDBOperator(getApplicationContext());
 		btnAdd = (Button) findViewById(R.id.btn_add);
 		btnAdd.setOnClickListener(this);
-		
-		Intent it=getIntent();
-		 oper=it.getStringExtra("oper");
-		 if ("update".equals(oper)) {
-			 taskId=it.getIntExtra("id", 0);
+
+		Intent it = getIntent();
+		oper = it.getStringExtra("oper");
+		if ("update".equals(oper)) {
+			taskId = it.getIntExtra("id", 0);
 			initTaskDetails(taskId);
 			btnAdd.setText("保存");
 			tBar.setTitle("修改事项");
-			Log.i("zeng", oper+"=="+taskId);
+			Log.i("zeng", oper + "==" + taskId);
 		}
-		
-				
+
 	}
 
 	private void initTaskDetails(int id) {
-	 TaskDetails taskDetails=dbOperator.findTaskById(id);
-	 et_content.setText(taskDetails.getContent());
-	 et_date.setText(taskDetails.getDate());
-	 et_startTimer.setText(taskDetails.getStartTime());
-	 et_endTimer.setText(taskDetails.getEndTime());
-	 sp_cycle.setSelection(taskDetails.getCycle());
-	 sp_reminder.setSelection(taskDetails.getReminder());
+		TaskDetails taskDetails = dbOperator.findTaskById(id);
+		et_content.setText(taskDetails.getContent());
+		et_date.setText(taskDetails.getDate());
+		et_startTimer.setText(taskDetails.getStartTime());
+		et_endTimer.setText(taskDetails.getEndTime());
+		sp_cycle.setSelection(taskDetails.getCycle());
+		sp_reminder.setSelection(taskDetails.getReminder());
 	}
 
 	/**
@@ -158,17 +160,17 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 				Animation shake = AnimationUtils.loadAnimation(this,
 						R.anim.shake);
 				et_content.startAnimation(shake);
-			}else {
+			} else {
 				try {
-					TaskDetails task=getMyTask();
-					 if ("update".equals(oper)) {
-						 dbOperator.update(task);
-					 }
-					 else {
-						
-						 dbOperator.add(task);
-						 Toast.makeText(this, "添加成功!!!", Toast.LENGTH_SHORT).show();
-					}					 
+					TaskDetails task = getMyTask();
+					if ("update".equals(oper)) {
+						dbOperator.update(task);
+					} else {
+
+						dbOperator.add(task);
+						Toast.makeText(this, "添加成功!!!", Toast.LENGTH_SHORT)
+								.show();
+					}
 					finish();
 				} catch (Exception e) {
 					Toast.makeText(this, "添加失败!!!", Toast.LENGTH_SHORT).show();
@@ -181,7 +183,8 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 	}
 
 	private TaskDetails getMyTask() {
-		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		SimpleDateFormat dateFormat1 = new SimpleDateFormat("HH:mm");
 		TaskDetails taskDetails = new TaskDetails();
 		taskDetails.setContent(et_content.getText().toString());
 		taskDetails.setCycle(sp_cycle.getSelectedItemPosition());
@@ -189,12 +192,49 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 		taskDetails.setEndTime(et_endTimer.getText().toString());
 		taskDetails.setReminder(sp_reminder.getSelectedItemPosition());
 		taskDetails.setStartTime(et_startTimer.getText().toString());
-		 if ("update".equals(oper)) {
-			 taskDetails.set_id(taskId);
-			 
-		 }
+		if (sp_reminder.getSelectedItemPosition() > 0) {
+			System.out.println(sp_reminder.getSelectedItemPosition()
+					+ "+++"+et_date.getText() + " "+ et_startTimer.getText().toString());
+			Calendar calendar = Calendar.getInstance();
+			try {
+				calendar.setTime(dateFormat.parse(et_date.getText() + " "
+						+ et_startTimer.getText().toString()));
+				System.out.println(sp_reminder.getSelectedItemPosition()
+						+ "***" + dateFormat.format(calendar.getTime()));
+				switch (sp_reminder.getSelectedItemPosition()) {
+				case 2:// 提前五分钟提醒
+					calendar.add(Calendar.MINUTE, -5);
+					break;
+				case 3:// 提前10分钟提醒
+					calendar.add(Calendar.MINUTE, -10);
+					break;
+				case 4:// 提前15分钟提醒
+					calendar.add(Calendar.MINUTE, -15);
+					break;
+				case 5:// 提前30分钟提醒
+					calendar.add(Calendar.MINUTE, -30);
+					break;
+				case 6:// 提前1小时提醒
+					calendar.add(Calendar.HOUR, -1);
+					break;
+				default:
+					break;
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+			taskDetails.setReminderDate(dateFormat1.format(calendar.getTime()));
+			System.out.println(sp_reminder.getSelectedItemPosition() + "==="
+					+ dateFormat1.format(calendar.getTime()));
+		}
+
+		if ("update".equals(oper)) {
+			taskDetails.set_id(taskId);
+
+		}
 		return taskDetails;
-		
+
 	}
 
 	@Override

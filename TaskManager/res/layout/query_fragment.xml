@@ -15,7 +15,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/arrow_right" />
+            android:background="@drawable/img_leftselector" />
 
         <ImageView
             android:id="@+id/query_iv2"
@@ -23,7 +23,7 @@
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:background="@drawable/arrow_left" />
+            android:background="@drawable/img_rightselector" />
 
         <Spinner
             android:id="@+id/sp_condition"
