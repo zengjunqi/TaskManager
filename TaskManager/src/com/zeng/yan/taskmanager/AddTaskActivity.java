@@ -3,6 +3,7 @@ package com.zeng.yan.taskmanager;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,15 +24,17 @@ import com.zeng.yan.taskmanager.bean.TaskDetails;
 import com.zeng.yan.taskmanager.db.TaskDBOperator;
 import com.zeng.yan.taskmanager.ui.TitleBar;
 import com.zeng.yan.taskmanager.ui.TitleBar.titleBarClickListener;
+import com.zeng.yan.taskmanager.utils.CalendarUtils;
 
 public class AddTaskActivity extends Activity implements OnClickListener {
 
-	private Spinner sp_cycle, sp_reminder;
+	private Spinner sp_cycle, sp_reminder, sp_type;
 	private EditText et_content, et_date, et_startTimer, et_endTimer;
 	private Button btnAdd;
 	private String[] cycle = { "不重复", "每天", "每周", "每月", "每年" };
 	private String[] reminder = { "不提醒", "按时提醒", "提前5分钟", "提前10分钟", "提前15分钟",
 			"提前30分钟", "提前1小时" };
+	private String[] type = { "健康", "家庭", "友谊", "爱情", "工作", "学习", "兴趣" };
 	private TitleBar tBar;
 	private String oper;
 	TaskDBOperator dbOperator;
@@ -44,6 +47,7 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.task_add);
 		sp_cycle = (Spinner) findViewById(R.id.sp_cycle);
 		sp_reminder = (Spinner) findViewById(R.id.sp_reminder);
+		sp_type = (Spinner) findViewById(R.id.sp_stype);
 		et_startTimer = (EditText) findViewById(R.id.et_startTimer);
 		et_endTimer = (EditText) findViewById(R.id.et_endTimer);
 		et_content = (EditText) findViewById(R.id.et_taskcontent);
@@ -57,6 +61,11 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 				android.R.layout.simple_spinner_item, reminder);
 		adpt1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sp_reminder.setAdapter(adpt1);
+
+		ArrayAdapter adpt2 = new ArrayAdapter(this,
+				android.R.layout.simple_spinner_item, type);
+		adpt1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		sp_type.setAdapter(adpt2);
 
 		et_date.setOnClickListener(this);
 		et_startTimer.setOnClickListener(this);
@@ -98,6 +107,7 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 		et_endTimer.setText(taskDetails.getEndTime());
 		sp_cycle.setSelection(taskDetails.getCycle());
 		sp_reminder.setSelection(taskDetails.getReminder());
+		sp_type.setSelection(taskDetails.getType());
 	}
 
 	/**
@@ -191,16 +201,15 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 		taskDetails.setDate(et_date.getText().toString());
 		taskDetails.setEndTime(et_endTimer.getText().toString());
 		taskDetails.setReminder(sp_reminder.getSelectedItemPosition());
+		taskDetails.setType(sp_type.getSelectedItemPosition());
 		taskDetails.setStartTime(et_startTimer.getText().toString());
 		if (sp_reminder.getSelectedItemPosition() > 0) {
-			System.out.println(sp_reminder.getSelectedItemPosition()
-					+ "+++"+et_date.getText() + " "+ et_startTimer.getText().toString());
+
 			Calendar calendar = Calendar.getInstance();
 			try {
 				calendar.setTime(dateFormat.parse(et_date.getText() + " "
 						+ et_startTimer.getText().toString()));
-				System.out.println(sp_reminder.getSelectedItemPosition()
-						+ "***" + dateFormat.format(calendar.getTime()));
+
 				switch (sp_reminder.getSelectedItemPosition()) {
 				case 2:// 提前五分钟提醒
 					calendar.add(Calendar.MINUTE, -5);
@@ -225,14 +234,30 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 			}
 
 			taskDetails.setReminderDate(dateFormat1.format(calendar.getTime()));
-			System.out.println(sp_reminder.getSelectedItemPosition() + "==="
-					+ dateFormat1.format(calendar.getTime()));
+			//计算事项所花的分钟数
+			
+			// System.out.println(sp_reminder.getSelectedItemPosition() + "==="
+			// + dateFormat1.format(calendar.getTime()));
 		}
 
 		if ("update".equals(oper)) {
 			taskDetails.set_id(taskId);
 
 		}
+		System.out.println("====更新数据前获取数据====");
+		try {
+			Date dateFrom = dateFormat.parse(taskDetails.getDate() + " "
+					+ taskDetails.getStartTime());
+			Date dateTo = dateFormat.parse(taskDetails.getDate() + " "
+					+ taskDetails.getEndTime());
+			long diff = dateTo.getTime() - dateFrom.getTime();
+			int minute = (int) (diff / (1000 * 60));
+			taskDetails.setTime(minute);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("========"+taskDetails.getTime());
 		return taskDetails;
 
 	}

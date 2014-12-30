@@ -9,6 +9,7 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -17,31 +18,24 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.zeng.yan.taskmanager.adapter.SpnnerAdapter;
+import com.zeng.yan.taskmanager.adapter.MySpnnerAdapter;
 import com.zeng.yan.taskmanager.bean.TaskDetails;
 import com.zeng.yan.taskmanager.db.TaskDBOperator;
 import com.zeng.yan.taskmanager.utils.CalendarUtils;
 
 public class QueryFragment extends Fragment implements OnClickListener {
-	private String[] condition = { "今日", "这周", "这月", "今年" };
+	private String[] condition = { "今日" };// , "这周", "这月"
 	private String[] cycle = { "不重复", "每天", "每周", "每月", "每年" };
+	int[] colors = new int[7];
 	private ListView lv;
 	private TaskDBOperator dbOperator;
 	private MyListAdapter dapter;
@@ -49,11 +43,21 @@ public class QueryFragment extends Fragment implements OnClickListener {
 	private int offset;
 	private int maxno;
 	private String conditonDate;
-	Spinner spCondition;
+	private Spinner spCondition;
 	private String periodStartDate;
 	private String periodEndDate;
-	SpinnerAdapter spAdapter;
+	private MySpnnerAdapter spAdapter;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	private String condtion;
+	private int flag = 0;// 0为天查询,1为周查询,2为月查询
+
+	public String getCondtion() {
+		return condtion;
+	}
+
+	public void setCondtion(String condtion) {
+		this.condtion = condtion;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,10 +79,10 @@ public class QueryFragment extends Fragment implements OnClickListener {
 		 * (android.R.layout.simple_spinner_dropdown_item);
 		 * spCondition.setAdapter(adpt);
 		 */
-
-		spAdapter = new SpnnerAdapter(getActivity(), condition);
+		setConditon();
+		spAdapter = new MySpnnerAdapter(getActivity(), condition);
 		spCondition.setAdapter(spAdapter);
-
+		// dapter.notifyDataSetChanged();
 		ImageView ivleft = (ImageView) getActivity().findViewById(
 				R.id.query_iv1);
 		ImageView ivright = (ImageView) getActivity().findViewById(
@@ -88,32 +92,77 @@ public class QueryFragment extends Fragment implements OnClickListener {
 		ivright.setOnClickListener(this);
 		dbOperator = new TaskDBOperator(getActivity());
 		lv = (ListView) getActivity().findViewById(R.id.query_lv);
+		lv.setDividerHeight(0);
 		offset = 0;
 		maxno = 20;
 		conditonDate = dateFormat.format(new Date());
-		condition[0] = conditonDate;
-		// condition[1]="当前周("+conditonDate+")";
-		// condition[2]="今日("+conditonDate+")";
-		// condition[3]="今日("+conditonDate+")";
-		dapter = new MyListAdapter(getActivity(), list);
-		lv.setAdapter(dapter);
-		lv.setDividerHeight(0);
-		spCondition.setOnItemSelectedListener(new OnItemSelectedListener() {
+		// fillListViewData();
+		// dapter = new MyListAdapter(getActivity(), list);
+		// lv.setAdapter(dapter);
+		/*
+		 * spCondition.setOnItemSelectedListener(new OnItemSelectedListener() {
+		 * 
+		 * @Override public void onItemSelected(AdapterView<?> parent, View
+		 * view, int position, long id) { //conditonDate = dateFormat.format(new
+		 * Date()); fillListViewData(); }
+		 * 
+		 * @Override public void onNothingSelected(AdapterView<?> parent) { //
+		 * TODO Auto-generated method stub
+		 * 
+		 * } });
+		 */
+		colors[0] = Color.parseColor(getActivity().getResources().getString(
+				R.string.health));
+		colors[1] = Color.parseColor(getActivity().getResources().getString(
+				R.string.family));
+		colors[2] = Color.parseColor(getActivity().getResources().getString(
+				R.string.friend));
+		colors[3] = Color.parseColor(getActivity().getResources().getString(
+				R.string.love));
+		colors[4] = Color.parseColor(getActivity().getResources().getString(
+				R.string.work));
+		colors[5] = Color.parseColor(getActivity().getResources().getString(
+				R.string.study));
+		colors[6] = Color.parseColor(getActivity().getResources().getString(
+				R.string.interest));
+	}
 
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				fillListViewData();
-			}
+	private void initSpinnerCondition(String date) {
+		String conditonPeriod = CalendarUtils.getDatePeriod(date,
+				spCondition.getSelectedItemPosition());
+		System.out.println("==" + conditonPeriod);
+		String[] period = conditonPeriod.split(";");
+		condition[0] = "今天:" + conditonDate;
+		condition[1] = CalendarUtils.getWeekOfYear(conditonDate) + "周("
+				+ period[0] + "到" + period[1] + ")";
+		String[] dString = conditonDate.split("-");
+		condition[2] = dString[0] + "-" + dString[1] + "月";
+		condition[3] = dString[0] + "年/全部";
+	}
 
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-				// TODO Auto-generated method stub
+	private void setConditon() {
 
-			}
-		});
+		String date = dateFormat.format(new Date());
+		// String weekPeriod = CalendarUtils.getDatePeriod(date, 1);
+		// String[] week = weekPeriod.split(";");
+		// String monthPeriod = CalendarUtils.getDatePeriod(date, 2);
+		// String[] month = monthPeriod.split(";");
+		condition[0] = CalendarUtils.getDateFormate(date, true);
+		// condition[1] = CalendarUtils.getDateFormate(week[0], false) + "-"
+		// + CalendarUtils.getDateFormate(week[1], false);
+		// condition[2] = CalendarUtils.getDateFormate(month[0], false) + "-"
+		// + CalendarUtils.getDateFormate(month[1], false);
+	}
 
+	/**
+	 * main fragment调用时执行
+	 * 
+	 * @param flag
+	 */
+	public void setCondition(int flag) {
+		this.flag = flag;
+		conditonDate = dateFormat.format(new Date());
+		fillListViewData();
 	}
 
 	@Override
@@ -121,15 +170,26 @@ public class QueryFragment extends Fragment implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.query_iv1:
-			conditonDate = CalendarUtils.calculateEndDate(periodStartDate, -2);
-			System.out.println("periodStartDate" + periodStartDate + "=="
-					+ "conditonDate:" + conditonDate);
+			if (flag == 1) {
+				conditonDate = CalendarUtils.calculateEndDate(periodStartDate,
+						-2);
+			} else {
+				conditonDate = CalendarUtils.calculateEndDate(periodStartDate,
+						-1);
+			}
+
+			// System.out.println("periodStartDate" + periodStartDate + "=="
+			// + "conditonDate:" + conditonDate);
 			fillListViewData();
 			break;
 		case R.id.query_iv2:
-			conditonDate = CalendarUtils.calculateEndDate(periodEndDate, 2);
-			System.out.println("periodEndDate" + periodEndDate + "=="
-					+ "conditonDate:" + conditonDate);
+			if (flag == 1) {// 周查询
+				conditonDate = CalendarUtils.calculateEndDate(periodEndDate, 2);
+			} else {
+				conditonDate = CalendarUtils.calculateEndDate(periodEndDate, 1);
+			}
+			// System.out.println("periodEndDate" + periodEndDate + "=="
+			// + "conditonDate:" + conditonDate);
 			fillListViewData();
 			break;
 		default:
@@ -139,24 +199,32 @@ public class QueryFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		fillListViewData();
+		fillListViewData();// 更新时
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override
 	public void onResume() {
-		fillListViewData();
+		fillListViewData();// 增加了时刷新界面
 		super.onResume();
 	}
 
 	private void fillListViewData() {
 
-		String conditonPeriod = CalendarUtils.getDatePeriod(conditonDate,
-				spCondition.getSelectedItemPosition());
-		System.out.println(conditonPeriod);
+		String conditonPeriod = CalendarUtils.getDatePeriod(conditonDate, flag);
 		String[] period = conditonPeriod.split(";");
+		//System.out.println(conditonPeriod);
+
 		periodStartDate = period[0];
 		periodEndDate = period[1];
+		if (flag == 0) {
+			condition[0] = CalendarUtils.getDateFormate(periodStartDate, true);
+		} else {
+			condition[0] = CalendarUtils.getDateFormate(periodStartDate, false)
+					+ "-" + CalendarUtils.getDateFormate(periodEndDate, false);
+		}
+		//
+		spAdapter.notifyDataSetChanged();
 		if (list != null) {
 			list.clear();
 			list.addAll(dbOperator
@@ -165,9 +233,20 @@ public class QueryFragment extends Fragment implements OnClickListener {
 		} else {
 			list = dbOperator.findPart(offset, maxno, period[0], period[1]);
 		}
+		if (dapter == null) { // 如果适配器为空 则创建适配器对象
+			// 为listview设置adapter
+			dapter = new MyListAdapter(getActivity(), list);
+			lv.setAdapter(dapter);
 
-		dapter = new MyListAdapter(getActivity(), list);
-		lv.setAdapter(dapter);
+		} else {//
+			dapter.notifyDataSetChanged(); // 动态更新ListView
+		}
+//		for (TaskDetails ts : list) {
+//			System.out.println(ts.toString());
+//		}
+
+		// dapter = new MyListAdapter(getActivity(), list);
+		// lv.setAdapter(dapter);
 
 	}
 
@@ -246,7 +325,7 @@ public class QueryFragment extends Fragment implements OnClickListener {
 						.findViewById(R.id.tl_iv_cycle);
 				holder.tl_cycle = (TextView) convertView
 						.findViewById(R.id.tl_cycle);
-						holder.tl_space = (TextView) convertView
+				holder.tl_space = (TextView) convertView
 						.findViewById(R.id.tl_space);
 				convertView.setTag(holder);
 			} else {
@@ -265,6 +344,8 @@ public class QueryFragment extends Fragment implements OnClickListener {
 						R.id.tl_ll_contenter);
 
 				holder.tl_tv_date_time.setText(list.get(position).getDate());
+//				System.out.println("title0*****" + position + "*"
+//						+ list.get(position).getDate());
 
 			} else {
 				if (list.get(position).getDate()
@@ -274,8 +355,13 @@ public class QueryFragment extends Fragment implements OnClickListener {
 							R.id.tl_ll_contenter);
 					params.addRule(RelativeLayout.ALIGN_BOTTOM,
 							R.id.tl_ll_contenter);
-
+//					System.out.println("Content*****" + position + "*"
+//							+ list.get(position).getDate() + "**"
+//							+ list.get(position).getContent());
 				} else {
+//					System.out.println("othertitle*****" + position + "*"
+//							+ list.get(position).getDate());
+					holder.tl_title.setVisibility(View.VISIBLE);
 					holder.tl_tv_date_time
 							.setText(list.get(position).getDate());
 					// params1.addRule(RelativeLayout.ALIGN_TOP, R.id.tl_title);
@@ -288,6 +374,31 @@ public class QueryFragment extends Fragment implements OnClickListener {
 				}
 
 			}
+
+			holder.tl_tv_content.setText(list.get(position).getContent());
+			holder.tl_task_time.setText(list.get(position).getStartTime() + "-"
+					+ list.get(position).getEndTime());
+			holder.tl_alarm_time.setText(list.get(position).getReminderDate());
+
+			holder.tl_iv_timedot.setLayoutParams(params);
+			if (TextUtils.isEmpty(list.get(position).getReminderDate())) {
+				holder.tl_alarm_time.setVisibility(View.GONE);
+				holder.tl_iv_alarm_time.setVisibility(View.GONE);
+				holder.tl_space.setVisibility(View.GONE);
+			} else {
+				holder.tl_alarm_time.setVisibility(View.VISIBLE);
+				holder.tl_iv_alarm_time.setVisibility(View.VISIBLE);
+				holder.tl_space.setVisibility(View.VISIBLE);
+			}
+			if (list.get(position).getCycle() == 0) {
+				holder.tl_cycle.setVisibility(View.GONE);
+				holder.tl_iv_cycle.setVisibility(View.GONE);
+			} else {
+				holder.tl_cycle.setVisibility(View.VISIBLE);
+				holder.tl_iv_cycle.setVisibility(View.VISIBLE);
+				holder.tl_cycle.setText(cycle[list.get(position).getCycle()]);
+			}
+			 holder.tl_tv_content.setTextColor(colors[list.get(position).getType()]);
 
 			holder.tl_ll_content
 					.setOnLongClickListener(new OnLongClickListener() {
@@ -353,31 +464,13 @@ public class QueryFragment extends Fragment implements OnClickListener {
 						}
 					});
 
-			holder.tl_tv_content.setText(list.get(position).getContent());
-			holder.tl_task_time.setText(list.get(position).getStartTime() + "-"
-					+ list.get(position).getEndTime());
-			holder.tl_alarm_time.setText(list.get(position).getReminderDate());
-			
-			holder.tl_iv_timedot.setLayoutParams(params);
-			if (TextUtils.isEmpty(list.get(position).getReminderDate())) {
-				holder.tl_alarm_time.setVisibility(View.GONE);
-				holder.tl_iv_alarm_time.setVisibility(View.GONE);
-				holder.tl_space.setVisibility(View.GONE);
-			}
-			if (list.get(position).getCycle()==0) {
-				holder.tl_cycle.setVisibility(View.GONE);
-				holder.tl_iv_cycle.setVisibility(View.GONE);
-			}else {
-				
-				holder.tl_cycle.setText(cycle[list.get(position).getCycle()]);
-			}
 			return convertView;
 		}
 	}
 
 	static class ViewHolder {
 		TextView tl_tv_date_time, tl_tv_content, tl_task_time, tl_alarm_time,
-				tl_cycle,tl_space;
+				tl_cycle, tl_space;
 		View line;
 		LinearLayout tl_ll_content;
 		ImageView tl_iv_timedot, tl_iv_datedot, tl_iv_alarm_time, tl_iv_cycle;

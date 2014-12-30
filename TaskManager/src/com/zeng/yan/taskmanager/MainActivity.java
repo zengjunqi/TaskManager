@@ -3,6 +3,7 @@ package com.zeng.yan.taskmanager;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,10 +16,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.RadioButton;
+import android.widget.Toast;
+
+import com.zeng.yan.taskmanager.MainFragment.Mylistener;
 import com.zeng.yan.taskmanager.ui.TitleBar;
 import com.zeng.yan.taskmanager.ui.TitleBar.titleBarClickListener;
 
-public class MainActivity extends FragmentActivity implements OnClickListener {
+public class MainActivity extends FragmentActivity implements OnClickListener,
+		Mylistener {
 	// private ImageView mTabline;
 	private ViewPager viewPager;
 	private FragmentPagerAdapter fragmentPagerAdapter;
@@ -47,6 +52,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		 * mTabline.setLayoutParams(layoutParams);
 		 */
 		initView();
+		
 	}
 
 	private void initView() {
@@ -55,12 +61,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		setting = (RadioButton) findViewById(R.id.rb_setting);
 		viewPager = (ViewPager) findViewById(R.id.vp);
 		fragments = new ArrayList<Fragment>();
-		MainFragment tab1 = new MainFragment();
+		ChatFragment tab1 = new ChatFragment();
 		QueryFragment tab2 = new QueryFragment();
 		SetFragment tab3 = new SetFragment();
-		
-		fragments.add(tab2);
+
 		fragments.add(tab1);
+		fragments.add(tab2);
 		fragments.add(tab3);
 		fragmentPagerAdapter = new MyFragmentAdapter(
 				getSupportFragmentManager(), fragments);
@@ -108,20 +114,22 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 			}
 		});
-		titleBar=(TitleBar) findViewById(R.id.myTitleBar);
+		titleBar = (TitleBar) findViewById(R.id.myTitleBar);
 		titleBar.setOnTitleBarClickListener(new titleBarClickListener() {
-			
+
 			@Override
 			public void rightClick() {
 				// TODO Auto-generated method stub
-				Intent intent=new Intent(MainActivity.this, AddTaskActivity.class);
+				Intent intent = new Intent(MainActivity.this,
+						AddTaskActivity.class);
 				startActivity(intent);
 			}
-			
+
 			@Override
 			public void leftClick() {
 				// TODO Auto-generated method stub
-				//Toast.makeText(getApplicationContext(), "左点击了.", Toast.LENGTH_SHORT).show();
+				// Toast.makeText(getApplicationContext(), "左点击了.",
+				// Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
@@ -149,6 +157,33 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			setting.setTextColor(Color.RED);
 			viewPager.setCurrentItem(2);
 			break;
+		}
+
+	}
+
+	@Override
+	public void setChange(int datePeriod) {
+		// TODO Auto-generated method stub
+		viewPager.setCurrentItem(1);
+
+//		android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+//		QueryFragment qf = (QueryFragment) fm.findFragmentByTag("");
+		//Toast.makeText(this, datePeriod, Toast.LENGTH_SHORT).show();
+
+		QueryFragment qf = (QueryFragment) getSupportFragmentManager()
+				.findFragmentByTag("android:switcher:" + R.id.vp + ":1");
+
+		if (qf != null) // 可能没有实例化
+
+		{
+
+			if (qf.getView() != null)
+
+			{
+
+				qf.setCondition(datePeriod);// 自定义方法更新
+
+			}
 		}
 
 	}

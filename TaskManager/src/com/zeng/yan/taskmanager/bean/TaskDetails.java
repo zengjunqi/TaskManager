@@ -8,7 +8,21 @@ public class TaskDetails {
 	private String startTime;
 	private String endTime;
 	private int reminder;
+	private int type;
+	private int time;
+	public int getTime() {
+		return time;
+	}
+	public void setTime(int time) {
+		this.time = time;
+	}
 	private String reminderDate;
+	public int getType() {
+		return type;
+	}
+	public void setType(int type) {
+		this.type = type;
+	}
 	public String getReminderDate() {
 		return reminderDate;
 	}
@@ -56,6 +70,13 @@ public class TaskDetails {
 	}
 	public void setReminder(int reminder) {
 		this.reminder = reminder;
+	}
+	@Override
+	public String toString() {
+		return "TaskDetails [_id=" + _id + ", content=" + content + ", cycle="
+				+ cycle + ", date=" + date + ", startTime=" + startTime
+				+ ", endTime=" + endTime + ", reminder=" + reminder
+				+ ", reminderDate=" + reminderDate + "]";
 	}
 	
 }

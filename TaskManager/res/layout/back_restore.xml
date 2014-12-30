@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zengyan="http://schemas.android.com/apk/res/com.zeng.yan.taskmanager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.zeng.yan.taskmanager.ui.TitleBar
+        android:id="@+id/myTitleBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        zengyan:leftivVisable="true"
+        zengyan:leftivsrc="@drawable/back"
+        zengyan:titletext="备份与还原" >
+    </com.zeng.yan.taskmanager.ui.TitleBar>
+
+    <ListView
+        android:id="@+id/br_lv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="还没有备份文件......" />
+
+    <Button
+        android:id="@+id/btn_backup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/btn_shape"
+        android:text="本地备份" />
+
+</LinearLayout>

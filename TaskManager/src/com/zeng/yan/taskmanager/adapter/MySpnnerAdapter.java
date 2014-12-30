@@ -25,11 +25,11 @@ import android.widget.Toast;
 import com.zeng.yan.taskmanager.R;
 import com.zeng.yan.taskmanager.bean.TaskDetails;
 
-public class SpnnerAdapter extends BaseAdapter {
+public class MySpnnerAdapter extends BaseAdapter {
 	private Context context;
 	private String[] list;
 
-	public SpnnerAdapter(Context context, String[] list) {
+	public MySpnnerAdapter(Context context, String[] list) {
 		this.context = context;
 		this.list = list;
 	}

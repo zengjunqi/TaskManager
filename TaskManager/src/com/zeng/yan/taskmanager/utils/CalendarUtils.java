@@ -3,6 +3,7 @@ package com.zeng.yan.taskmanager.utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class CalendarUtils {
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat(
@@ -187,11 +188,38 @@ public class CalendarUtils {
 		}
 		return null;
 	}
+	
+	 public static int getWeekOfYear(String date) {
+		  Calendar calendar = Calendar.getInstance();
+		  try {
+		   calendar.setTime(dateFormat.parse(date));
+		  int week=calendar.get(Calendar.WEEK_OF_YEAR);
+		   return week;
+		  } catch (java.text.ParseException e) {
+		   e.printStackTrace();
+		  }
+		  return 0;
+	 }
+
+		public static String getDateFormate(String date, boolean needYear) {
+			String[] foString = date.split("-");
+			String dateString;
+			if (needYear) {
+
+				dateString = foString[0] + "年" + foString[1] + "月" + foString[2]
+						+ "日";
+			} else {
+
+				dateString = foString[1] + "月" + foString[2] + "日";
+			}
+			return dateString;
+		}
+
 
 	/**
 	 * 获取指定日期所在周的开始时间与结束时间,以;分隔开始时间与结束时间
 	 */
-	public static String getWeekDate2(String date) {
+	/*public static String getWeekDate2(String date) {
 		Calendar calendar = Calendar.getInstance();
 		// calendar.setFirstDayOfWeek(Calendar.MONDAY); //设置每周的第一天为星期一
 		// calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);//每周从周一开始
@@ -219,5 +247,5 @@ public class CalendarUtils {
 		}
 		return null;
 	}
-
+*/
 }

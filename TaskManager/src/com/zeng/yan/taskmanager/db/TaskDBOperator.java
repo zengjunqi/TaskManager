@@ -6,6 +6,7 @@ import java.util.List;
 import com.zeng.yan.taskmanager.bean.TaskDetails;
 import com.zeng.yan.taskmanager.utils.CalendarUtils;
 
+import android.R.color;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -34,14 +35,17 @@ public class TaskDBOperator {
 			TaskDetails info = new TaskDetails();
 
 			info.set_id(cursor.getInt(cursor.getColumnIndex("_id")));
-		 info.setDate(CalendarUtils.getDateAndWeek(cursor.getString(cursor.getColumnIndex("date"))));
+			info.setDate(CalendarUtils.getDateAndWeek(cursor.getString(cursor
+					.getColumnIndex("date"))));
 			info.setStartTime(cursor.getString(cursor
 					.getColumnIndex("startTime")));
 			info.setEndTime(cursor.getString(cursor.getColumnIndex("endTime")));
 			info.setContent(cursor.getString(cursor.getColumnIndex("content")));
 			info.setCycle(cursor.getInt(cursor.getColumnIndex("cycle")));
 			info.setReminder(cursor.getInt(cursor.getColumnIndex("reminder")));
-			info.setReminderDate(cursor.getString(cursor.getColumnIndex("reminderdate")));
+			info.setReminderDate(cursor.getString(cursor
+					.getColumnIndex("reminderdate")));
+			info.setType(cursor.getInt(cursor.getColumnIndex("type")));
 			result.add(info);
 		}
 		cursor.close();
@@ -49,20 +53,24 @@ public class TaskDBOperator {
 		return result;
 	}
 
-	public TaskDetails findTaskById(int id){
+	public TaskDetails findTaskById(int id) {
 
 		TaskDetails info = new TaskDetails();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		Cursor cursor = db.rawQuery("select * from mytasks where _id=? ", new String[]{String.valueOf(id)});
-		if(cursor.moveToNext()){
+		Cursor cursor = db.rawQuery("select * from mytasks where _id=? ",
+				new String[] { String.valueOf(id) });
+		if (cursor.moveToNext()) {
 			info.set_id(cursor.getInt(cursor.getColumnIndex("_id")));
 			info.setDate(cursor.getString(cursor.getColumnIndex("date")));
-			info.setStartTime(cursor.getString(cursor.getColumnIndex("startTime")));
+			info.setStartTime(cursor.getString(cursor
+					.getColumnIndex("startTime")));
 			info.setEndTime(cursor.getString(cursor.getColumnIndex("endTime")));
 			info.setContent(cursor.getString(cursor.getColumnIndex("content")));
 			info.setCycle(cursor.getInt(cursor.getColumnIndex("cycle")));
 			info.setReminder(cursor.getInt(cursor.getColumnIndex("reminder")));
-			info.setReminderDate(cursor.getString(cursor.getColumnIndex("reminderdate")));
+			info.setReminderDate(cursor.getString(cursor
+					.getColumnIndex("reminderdate")));
+			info.setType(cursor.getInt(cursor.getColumnIndex("type")));
 		}
 		cursor.close();
 		db.close();
@@ -79,6 +87,8 @@ public class TaskDBOperator {
 		values.put("cycle", info.getCycle());
 		values.put("reminder", info.getReminder());
 		values.put("reminderdate", info.getReminderDate());
+		values.put("type", info.getType());
+		values.put("time", info.getTime());
 		db.insert("mytasks", null, values);
 		db.close();
 	}
@@ -93,6 +103,8 @@ public class TaskDBOperator {
 		values.put("cycle", info.getCycle());
 		values.put("reminder", info.getReminder());
 		values.put("reminderdate", info.getReminderDate());
+		values.put("type", info.getType());
+		values.put("time", info.getTime());
 		db.update("mytasks", values, "_id=?",
 				new String[] { String.valueOf(info.get_id()) });
 		db.close();
@@ -102,5 +114,22 @@ public class TaskDBOperator {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.delete("mytasks", "_id=?", new String[] { id });
 		db.close();
+	}
+
+	public double[] find(String startDate, String endDate) {
+		double[] it = {0,0,0,0,0,0,0};
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		Cursor cursor = db
+				.rawQuery(
+						"select type,sum(time) as time from mytasks where date>= ? and date<=?  group by type",
+						new String[] { String.valueOf(startDate),
+								String.valueOf(endDate) });
+		while (cursor.moveToNext()) {
+			it[cursor.getInt(0)] = cursor.getInt(1);
+			System.out.println("=Type:"+cursor.getInt(0)+"=Ê±¼ä:"+cursor.getInt(1));
+		}
+		cursor.close();
+		db.close();
+		return it;
 	}
 }
