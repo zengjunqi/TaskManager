@@ -458,7 +458,7 @@ public class QueryFragment extends Fragment implements OnClickListener {
 
 										}
 									});
-
+							builder2.setNegativeButton("È¡Ïû", null);
 							builder2.create().show();
 							return true;
 						}

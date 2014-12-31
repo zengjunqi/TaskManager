@@ -10,6 +10,13 @@ public class TaskDetails {
 	private int reminder;
 	private int type;
 	private int time;
+	private String updateTime;
+	public String getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
 	public int getTime() {
 		return time;
 	}

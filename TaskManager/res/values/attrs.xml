@@ -2,6 +2,8 @@
 <resources>
       <declare-styleable name="myTitleBar">
         <attr name="titletext" format="string" />
+         <attr name="desc_on" format="string" />
+          <attr name="desc_off" format="string" />
         <attr name="leftivsrc" format="reference" />
         <attr name="rightivsrc" format="reference" />
         <attr name="leftivVisable" format="boolean" />

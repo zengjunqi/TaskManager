@@ -71,7 +71,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		fragmentPagerAdapter = new MyFragmentAdapter(
 				getSupportFragmentManager(), fragments);
 		viewPager.setAdapter(fragmentPagerAdapter);
-		myHome.setTextColor(Color.RED);
+		myHome.setTextColor(Color.parseColor(getString(R.string.maincolor)));
 		myHome.setChecked(true);
 		myHome.setOnClickListener(this);
 		query.setOnClickListener(this);
@@ -85,15 +85,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 				resetTextView();
 				switch (position) {
 				case 0:
-					myHome.setTextColor(Color.RED);
+					myHome.setTextColor(Color.parseColor(getString(R.string.maincolor)));
 					myHome.setChecked(true);
 					break;
 				case 1:
-					query.setTextColor(Color.RED);
+					query.setTextColor(Color.parseColor(getString(R.string.maincolor)));
 					query.setChecked(true);
 					break;
 				case 2:
-					setting.setTextColor(Color.RED);
+					setting.setTextColor(Color.parseColor(getString(R.string.maincolor)));
 					setting.setChecked(true);
 					break;
 				}
@@ -145,16 +145,16 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		resetTextView();
 		switch (v.getId()) {
 		case R.id.rb_home:
-			myHome.setTextColor(Color.RED);
+			myHome.setTextColor(Color.parseColor(getString(R.string.maincolor)));
 			viewPager.setCurrentItem(0);
 			break;
 
 		case R.id.rb_query:
-			query.setTextColor(Color.RED);
+			query.setTextColor(Color.parseColor(getString(R.string.maincolor)));
 			viewPager.setCurrentItem(1);
 			break;
 		case R.id.rb_setting:
-			setting.setTextColor(Color.RED);
+			setting.setTextColor(Color.parseColor(getString(R.string.maincolor)));
 			viewPager.setCurrentItem(2);
 			break;
 		}

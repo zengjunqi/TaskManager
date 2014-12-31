@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.zeng.yan.taskmanager.MainActivity"
+            android:name="com.zeng.yan.taskmanager.SplashActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,6 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+         <activity android:name="com.zeng.yan.taskmanager.MainActivity" />
         <activity android:name="com.zeng.yan.taskmanager.AddTaskActivity" >
         </activity>
         <activity
@@ -35,6 +36,7 @@
             android:theme="@android:style/Theme.Dialog" >
         </activity>
          <activity android:name="com.zeng.yan.taskmanager.BackRestoreActivity" />
+          <activity android:name="com.zeng.yan.taskmanager.ReplyActivity" />
     </application>
 
 </manifest>

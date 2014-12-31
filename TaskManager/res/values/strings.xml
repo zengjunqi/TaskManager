@@ -3,7 +3,7 @@
 
     <string name="app_name">时间管理</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="updateweburl">http://10.10.10.83/update.html</string>
     <string name="health">#339933</string>
     <string name="family">#9966ff</string>
     <string name="friend">#99cc00</string>
@@ -11,5 +11,6 @@
     <string name="work">#0000cc</string>
     <string name="study">#cc0099</string>
     <string name="interest">#ff9900</string>
+      <string name="maincolor">#13b3f2</string>
 
 </resources>

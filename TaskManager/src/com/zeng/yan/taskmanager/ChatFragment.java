@@ -60,7 +60,7 @@ public class ChatFragment extends Fragment {
 			}
 		}
 
-		CategorySeries dataset = buildCategoryDataset("测试饼图", values);
+		CategorySeries dataset = buildCategoryDataset(j == values.length,"饼图", values);
 
 		int[] colors = {
 				Color.parseColor(getResources().getString(R.string.health)),
@@ -90,8 +90,13 @@ public class ChatFragment extends Fragment {
 		layout.addView(graphicalView, lp1);
 	}
 
-	protected CategorySeries buildCategoryDataset(String title, double[] values) {
+	protected CategorySeries buildCategoryDataset(Boolean noData,String title, double[] values) {
 		CategorySeries series = new CategorySeries(title);
+		if (noData) {
+			series.add("无数据",1);
+			return series;
+		}
+		
 		double total = 0;
 		for (int i = 0; i < values.length; i++) {
 			total += values[i];
@@ -110,9 +115,16 @@ public class ChatFragment extends Fragment {
 	protected DefaultRenderer buildCategoryRenderer(Boolean noData, int[] colors) {
 		DefaultRenderer renderer = new DefaultRenderer();
 		if (noData == true) {
+			renderer.setZoomEnabled(false);// 设置不允许放大缩小.
+			renderer.setLabelsTextSize(30);// 饼图上标记文字的字体大小
+			renderer.setLabelsColor(Color.parseColor("#33B6EA"));// 饼图上标记文字的颜色33B6EA
+			renderer.setPanEnabled(false);// 设置是否可以平移
 			renderer.setChartTitleTextSize(40);// 设置图表标题的文字大小
-			renderer.setChartTitle("本月还没有数据");// 设置图表的标题 默认是居中顶部显示
-
+			renderer.setChartTitle("统计本月结果");// 设置图表的标题 默认是居中顶部显示
+			SimpleSeriesRenderer r = new SimpleSeriesRenderer();
+			r.setChartValuesFormat(NumberFormat.getPercentInstance());//
+			r.setColor(Color.parseColor("#33B6EA"));
+			renderer.addSeriesRenderer(r);
 		} else {
 
 			renderer.setChartTitleTextSize(40);// 设置图表标题的文字大小
@@ -127,15 +139,15 @@ public class ChatFragment extends Fragment {
 			renderer.setFitLegend(true);//
 			renderer.setClickEnabled(true);// 设置是否可以被点击
 			renderer.setMargins(new int[] { 20, 30, 15, 0 });
+			for (int color : colors) {
+				SimpleSeriesRenderer r = new SimpleSeriesRenderer();
+				r.setChartValuesFormat(NumberFormat.getPercentInstance());//
+				r.setColor(color);
+				renderer.addSeriesRenderer(r);
+			}
 		}
 		// margins - an array containing the margin size values, in this order:
 		// top, left, bottom, right
-		for (int color : colors) {
-			SimpleSeriesRenderer r = new SimpleSeriesRenderer();
-			r.setChartValuesFormat(NumberFormat.getPercentInstance());//
-			r.setColor(color);
-			renderer.addSeriesRenderer(r);
-		}
 		return renderer;
 	}
 }

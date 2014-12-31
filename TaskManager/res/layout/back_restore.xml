@@ -13,27 +13,30 @@
         zengyan:leftivsrc="@drawable/back"
         zengyan:titletext="备份与还原" >
     </com.zeng.yan.taskmanager.ui.TitleBar>
-
+<!-- <FrameLayout  android:layout_width="match_parent"
+        android:layout_height="match_parent"> -->
     <ListView
         android:id="@+id/br_lv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp" >
     </ListView>
 
     <TextView
+        android:id="@+id/tv_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:gravity="center"
+        android:drawableTop="@drawable/record"
+        android:layout_gravity="center"
         android:text="还没有备份文件......" />
 
     <Button
         android:id="@+id/btn_backup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:layout_margin="10dp"
         android:background="@drawable/btn_shape"
-        android:text="本地备份" />
-
+        android:text="本  地  备  份" />
+<!-- </FrameLayout> -->
 </LinearLayout>
