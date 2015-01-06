@@ -98,6 +98,15 @@ public class BackupRestoreUtils {
 			serializer.text(String.valueOf(taskDetails.getTime()));
 			serializer.endTag(null, "time");
 
+			serializer.startTag(null, "expiredate");
+			if (TextUtils.isEmpty(taskDetails.getExpireDate())) {
+				serializer.text("");
+			}else {
+				serializer.text(taskDetails.getExpireDate());
+			}
+		
+			serializer.endTag(null, "expiredate");
+			
 			serializer.startTag(null, "updatetime");
 			serializer.text(taskDetails.getUpdateTime());
 			serializer.endTag(null, "updatetime");
@@ -168,6 +177,8 @@ public class BackupRestoreUtils {
 						details.setTime(Integer.parseInt(parser.nextText()));
 					} else if (node.equals("updatetime")) {
 						details.setUpdateTime(parser.nextText());
+					} else if (node.equals("expiredate")) {
+						details.setExpireDate(parser.nextText());
 					}
 
 					break;

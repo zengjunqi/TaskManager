@@ -68,51 +68,7 @@ public class MainFragment extends Fragment {
 		lv = (ListView) getActivity().findViewById(R.id.main_lv);
 		initList();
 
-		// **********新建饼图
-		final GraphicalView graphicalView;
-		TaskDBOperator helper=new TaskDBOperator(getActivity());
-		String conditonPeriod = CalendarUtils.getDatePeriod(dateFormat.format(new Date()), 2);
-		String[] period = conditonPeriod.split(";");// 
-		double [] values=helper.find(period[0], period[1]);
-		//double[] values={ 200.0, 300.0, 400.0, 600, 800, 900, 800 };
-		CategorySeries dataset = buildCategoryDataset("测试饼图", values);
-
-		int[] colors = {Color.parseColor(getResources().getString(R.string.health)),
-				Color.parseColor(getResources().getString(R.string.family)),
-				Color.parseColor(getResources().getString(R.string.friend)),
-				Color.parseColor(getResources().getString(R.string.love)),
-				Color.parseColor(getResources().getString(R.string.work)),
-				Color.parseColor(getResources().getString(R.string.study)),
-				Color.parseColor(getResources().getString(R.string.interest))};//getResources().getStringArray(R.array.colors);
-		DefaultRenderer renderer = buildCategoryRenderer(colors);
-
-		graphicalView = ChartFactory.getPieChartView(getActivity(), dataset,
-				renderer);// 饼状图
-		RelativeLayout layout = (RelativeLayout) getActivity().findViewById(
-				R.id.container);
-		layout.removeAllViews();
-		// layout.setBackgroundColor(Color.BLACK);
-
-		RelativeLayout.LayoutParams lp1 = new RelativeLayout.LayoutParams(
-				ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.MATCH_PARENT);// (650, 650);
-		lp1.addRule(RelativeLayout.CENTER_HORIZONTAL,
-				RelativeLayout.CENTER_HORIZONTAL);
-		lp1.topMargin = 10;
-		layout.addView(graphicalView, lp1);
-	
-		/*
-		 * graphicalView.setOnClickListener(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { // TODO Auto-generated method
-		 * stub SeriesSelection seriesSelection =
-		 * graphicalView.getCurrentSeriesAndPoint(); if (seriesSelection ==
-		 * null) { Toast.makeText(getActivity(), "No",
-		 * Toast.LENGTH_SHORT).show(); }else { Toast.makeText(getActivity(),
-		 * "Yes", Toast.LENGTH_SHORT).show(); } } });
-		 */
-		// layout.addView(lv);
-		// **饼图*//
+		
 
 		lv.setAdapter(new BaseAdapter() {
 
@@ -202,47 +158,5 @@ public class MainFragment extends Fragment {
 
 	}
 
-	protected CategorySeries buildCategoryDataset(String title, double[] values) {
-		CategorySeries series = new CategorySeries(title);
-		double total = 0;
-		for (int i = 0; i < values.length; i++) {
-			total += values[i];
-
-		}
-		series.add("健康", values[0] / total);
-		series.add("家庭", values[1] / total);
-		series.add("友谊", values[2] / total);
-		series.add("爱情", values[3] / total);
-		series.add("工作", values[4] / total);
-		series.add("学习", values[5] / total);
-		series.add("兴趣", values[6] / total);
-		return series;
-	}
-
-	protected DefaultRenderer buildCategoryRenderer(int[] colors) {
-		DefaultRenderer renderer = new DefaultRenderer();
-
-		renderer.setLegendTextSize(30);// 设置左下角表注的文字大小
-		// renderer.setZoomButtonsVisible(true);//设置显示放大缩小按钮
-		renderer.setZoomEnabled(false);// 设置不允许放大缩小.
-		renderer.setChartTitleTextSize(40);// 设置图表标题的文字大小
-		renderer.setChartTitle("统计本月结果");// 设置图表的标题 默认是居中顶部显示
-		renderer.setLabelsTextSize(30);// 饼图上标记文字的字体大小
-		renderer.setLabelsColor(Color.parseColor("#33B6EA"));// 饼图上标记文字的颜色
-		renderer.setPanEnabled(false);// 设置是否可以平移
-		renderer.setDisplayValues(true);// 是否显示值
-		renderer.setFitLegend(true);//
-		renderer.setClickEnabled(true);// 设置是否可以被点击
-		renderer.setMargins(new int[] { 20, 30, 15, 0 });
-
-		// margins - an array containing the margin size values, in this order:
-		// top, left, bottom, right
-		for (int color : colors) {
-			SimpleSeriesRenderer r = new SimpleSeriesRenderer();
-			r.setChartValuesFormat(NumberFormat.getPercentInstance());//
-			r.setColor(color);
-			renderer.addSeriesRenderer(r);
-		}
-		return renderer;
-	}
+	
 }

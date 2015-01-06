@@ -11,6 +11,14 @@ public class TaskDetails {
 	private int type;
 	private int time;
 	private String updateTime;
+	private String expireDate;
+	
+	public String getExpireDate() {
+		return expireDate;
+	}
+	public void setExpireDate(String expireDate) {
+		this.expireDate = expireDate;
+	}
 	public String getUpdateTime() {
 		return updateTime;
 	}

@@ -6,6 +6,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,6 +23,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.zeng.yan.taskmanager.R.string;
 import com.zeng.yan.taskmanager.bean.TaskDetails;
 import com.zeng.yan.taskmanager.db.TaskDBOperator;
 import com.zeng.yan.taskmanager.ui.TitleBar;
@@ -31,7 +35,7 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 	private Spinner sp_cycle, sp_reminder, sp_type;
 	private EditText et_content, et_date, et_startTimer, et_endTimer;
 	private Button btnAdd;
-	private String[] cycle = { "不重复", "每天", "每周", "每月", "每年" };
+	private String[] cycle = { "不重复", "每天", "本周", "本月", "本年" };
 	private String[] reminder = { "不提醒", "按时提醒", "提前5分钟", "提前10分钟", "提前15分钟",
 			"提前30分钟", "提前1小时" };
 	private String[] type = { "健康", "家庭", "友谊", "爱情", "工作", "学习", "兴趣" };
@@ -181,6 +185,12 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 						Toast.makeText(this, "添加成功!!!", Toast.LENGTH_SHORT)
 								.show();
 					}
+					if (sp_reminder.getSelectedItemPosition() > 0) {
+						
+						setAlarm(task);
+					}else if ("update".equals(oper)) {
+						cancleAlarm(taskId);
+					}
 					finish();
 				} catch (Exception e) {
 					Toast.makeText(this, "添加失败!!!", Toast.LENGTH_SHORT).show();
@@ -234,8 +244,8 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 			}
 
 			taskDetails.setReminderDate(dateFormat1.format(calendar.getTime()));
-			//计算事项所花的分钟数
-			
+			// 计算事项所花的分钟数
+
 			// System.out.println(sp_reminder.getSelectedItemPosition() + "==="
 			// + dateFormat1.format(calendar.getTime()));
 		}
@@ -244,7 +254,6 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 			taskDetails.set_id(taskId);
 
 		}
-		System.out.println("====更新数据前获取数据====");
 		try {
 			Date dateFrom = dateFormat.parse(taskDetails.getDate() + " "
 					+ taskDetails.getStartTime());
@@ -257,9 +266,62 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("========"+taskDetails.getTime());
+		if (sp_cycle.getSelectedItemPosition()>0) {
+			if (sp_cycle.getSelectedItemPosition()==1) {
+				taskDetails.setExpireDate("2099-12-31");
+			}else {
+				
+				String conditonPeriod = CalendarUtils.getDatePeriod(taskDetails.getDate(), sp_cycle.getSelectedItemPosition()-1);
+				String[] period = conditonPeriod.split(";");
+				taskDetails.setExpireDate(period[1]);
+			}
+		}
+		
 		return taskDetails;
 
+	}
+
+	private void getExpireDate(String date) {
+		String conditonPeriod = CalendarUtils.getDatePeriod(date, sp_cycle.getSelectedItemPosition());
+		String[] period = conditonPeriod.split(";");
+	}
+	
+	private boolean setAlarm(TaskDetails taskDetails) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		int id = 0;
+		if ("update".equals(oper)) {
+			id = taskId;
+		}else {
+			id=dbOperator.findMaxid();
+		}
+		System.out.println("**id:"+id);
+		Calendar calendar = Calendar.getInstance();
+		try {
+			calendar.setTime(dateFormat.parse(taskDetails.getDate() + " "
+					+ taskDetails.getReminderDate()));
+			Intent intent = new Intent(AddTaskActivity.this,
+					AlarmActivity.class); // 创建Intent对象
+			intent.putExtra("content", taskDetails.getContent());
+			PendingIntent pi = PendingIntent.getActivity(AddTaskActivity.this,
+					id, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+			AlarmManager aManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+			aManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+					pi);
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+	private void cancleAlarm(int id) {
+		Intent intent = new Intent(AddTaskActivity.this,
+				AlarmActivity.class); // 创建Intent对象
+		PendingIntent pi = PendingIntent.getActivity(AddTaskActivity.this,
+				id, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+		AlarmManager aManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		aManager.cancel(pi);
 	}
 
 	@Override

@@ -9,6 +9,7 @@
         android:targetSdkVersion="17" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -37,6 +38,26 @@
         </activity>
          <activity android:name="com.zeng.yan.taskmanager.BackRestoreActivity" />
           <activity android:name="com.zeng.yan.taskmanager.ReplyActivity" />
+              <activity android:name="com.zeng.yan.taskmanager.AlarmActivity" />
+          <service  android:name="com.zeng.yan.taskmanager.service.UpdateWidgetService" ></service>
+            <receiver android:name="com.zeng.yan.taskmanager.receiver.DailyWidget" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                 <action android:name="com.zeng.yan.taskmanager.refresh" />
+                  <action android:name="com.zeng.yan.taskmanager.additem" />
+                   <action android:name="com.zeng.yan.taskmanager.previous" />
+                  <action android:name="com.zeng.yan.taskmanager.next" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/process_widget_provider" />
+        </receiver>
+         <service   
+            android:name="com.zeng.yan.taskmanager.service.MyRemoteViewService"  
+            android:permission="android.permission.BIND_REMOTEVIEWS" />  
+            
+         <receiver android:name="com.zeng.yan.taskmanager.receiver.CycleDataReceiver" android:process=":remote"/>
     </application>
 
 </manifest>

@@ -9,9 +9,9 @@
         android:id="@+id/v_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        zengyan:desc_off="设置自动更新已经关闭"
-        zengyan:desc_on="设置自动更新已经开启"
-        zengyan:titletext="设置自动更新" >
+        zengyan:desc_off="设置检查更新已经关闭"
+        zengyan:desc_on="设置检查更新已经开启"
+        zengyan:titletext="设置检查更新" >
     </com.zeng.yan.taskmanager.ui.SettingItem>
 
     <com.zeng.yan.taskmanager.ui.SettingClickView

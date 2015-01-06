@@ -12,7 +12,7 @@ public class CalendarUtils {
 	public static String getDatePeriod(String date, int model) {
 		String result = null;
 		switch (model) {
-		case 0:// 周调用
+		case 0:// 日调用
 			result = date + ";" + date;
 			break;
 		case 1:// 周调用
@@ -59,9 +59,11 @@ public class CalendarUtils {
 		Calendar calendar = Calendar.getInstance();
 		try {
 			calendar.setTime(dateFormat.parse(date));
-			int year = calendar.get(Calendar.YEAR);
-			int month = calendar.get(Calendar.MONTH) + 1;
-			String startDate = year + "-" + month + "-01";
+//			int year = calendar.get(Calendar.YEAR);
+//			int month = calendar.get(Calendar.MONTH) + 1;
+			calendar.set(Calendar.DAY_OF_MONTH,
+					calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+			String startDate =  dateFormat.format(calendar.getTime());
 			calendar.set(Calendar.DAY_OF_MONTH,
 					calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 			String endDate = dateFormat.format(calendar.getTime());
@@ -101,6 +103,21 @@ public class CalendarUtils {
 			e.printStackTrace();
 		}
 
+		return null;
+	}
+	public static String getWeekPeriods(String date) {
+		  try {
+			Calendar calendar = Calendar.getInstance();
+			  calendar.setFirstDayOfWeek(Calendar.MONDAY);
+			  calendar.setTime(dateFormat.parse(date));
+			  System.out.println(calendar.get(Calendar.WEEK_OF_YEAR));
+			  
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 		return null;
 	}
 

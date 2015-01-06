@@ -16,6 +16,7 @@ import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.zeng.yan.taskmanager.bean.VersionInfo;
+import com.zeng.yan.taskmanager.utils.AlarmUtils;
 import com.zeng.yan.taskmanager.utils.StreamTools;
 
 import android.app.Activity;
@@ -131,6 +132,8 @@ public class SplashActivity extends Activity {
 
 		rlLayout.setAnimation(alphaAnimation);
 		// installShortCut();
+		AlarmUtils alarmUtils=new AlarmUtils(this);
+		alarmUtils.setCycleDataAlarm();
 
 	}
 
