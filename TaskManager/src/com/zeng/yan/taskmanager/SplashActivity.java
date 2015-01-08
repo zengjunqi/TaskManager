@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -78,7 +79,7 @@ public class SplashActivity extends Activity {
 
 			case NETWORK_ERROR:// 网络异常
 				enterHome();
-				Toast.makeText(SplashActivity.this, "网络异常", 0).show();
+				Toast.makeText(SplashActivity.this, "不能联接网络", 0).show();
 				break;
 
 			case JSON_ERROR:// JSON解析出错
@@ -132,8 +133,17 @@ public class SplashActivity extends Activity {
 
 		rlLayout.setAnimation(alphaAnimation);
 		// installShortCut();
-		AlarmUtils alarmUtils=new AlarmUtils(this);
-		alarmUtils.setCycleDataAlarm();
+
+		boolean alarm = sp.getBoolean("alarm", false);
+		if (!alarm) {
+
+			AlarmUtils alarmUtils = new AlarmUtils(this);
+			alarmUtils.setCycleDataAlarm();
+			Editor editor = sp.edit();
+			editor.putBoolean("alarm", true);
+			editor.commit();
+
+		}
 
 	}
 

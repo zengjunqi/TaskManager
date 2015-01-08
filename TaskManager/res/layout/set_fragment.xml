@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         zengyan:rightivsrc="@drawable/icon_back"
-        zengyan:titletext="帮助与反馈" >
+        zengyan:titletext="关于" >
     </com.zeng.yan.taskmanager.ui.SettingClickView>
 
 </LinearLayout>

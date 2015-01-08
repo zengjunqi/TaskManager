@@ -62,7 +62,7 @@ public class MySpnnerAdapter extends BaseAdapter {
 
 		//View view = View.inflate(context, R.layout.sp_item, null);
 		TextView tView = new TextView(context);
-		tView.setTextColor(Color.parseColor("#588E34"));
+		tView.setTextColor(Color.parseColor("#000000"));
 		tView.setGravity(Gravity.CENTER);
 		tView.setTextSize(20);
 		tView.setText(list[position]);

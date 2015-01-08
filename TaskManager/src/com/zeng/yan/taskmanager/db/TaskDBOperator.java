@@ -171,7 +171,6 @@ public class TaskDBOperator {
 	}
 
 	public double[] find(String startDate, String endDate) {
-		System.out.println("=startDate:" + startDate + "=endDate:" + endDate);
 		double[] it = { 0, 0, 0, 0, 0, 0, 0 };
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = db
@@ -181,8 +180,6 @@ public class TaskDBOperator {
 								String.valueOf(endDate) });
 		while (cursor.moveToNext()) {
 			it[cursor.getInt(0)] = cursor.getInt(1);
-			System.out.println("=Type:" + cursor.getInt(0) + "=Ê±¼ä:"
-					+ cursor.getInt(1));
 		}
 		cursor.close();
 		db.close();
@@ -220,8 +217,8 @@ public class TaskDBOperator {
 			SQLiteDatabase db = dbHelper.getReadableDatabase();
 			String sql = "insert into mytasks(content,cycle,date,startTime, endTime, reminder, reminderdate, type, time, updatetime )"
 					+ "select content,0,?,startTime, endTime, reminder, reminderdate, type, time, updatetime from mytasks "
-					+ "where expiredate>=?";
-			db.execSQL(sql, new String[] { date, date });
+					+ "where expiredate>=? and date!=?";
+			db.execSQL(sql, new String[] { date, date,date });
 			db.close();
 		} catch (Exception e) {
 			return false;
@@ -235,16 +232,16 @@ public class TaskDBOperator {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = db
 				.rawQuery(
-						"select _id,content,0, ? date,startTime, endTime, reminder, reminderdate, type, time, updatetime from mytasks "
-								+ "where expiredate>=? ", new String[] { date,
-								date });
+						"select _id,content,0, ? newdate,startTime, endTime, reminder, reminderdate, type, time, updatetime from mytasks "
+								+ "where expiredate>=? and date!=? ", new String[] { date,
+								date,date });
 		while (cursor.moveToNext()) {
 			if (!TextUtils.isEmpty(cursor.getString(cursor.getColumnIndex("reminderdate")))) {
 
 				TaskDetails info = new TaskDetails();
 
 				info.set_id(cursor.getInt(cursor.getColumnIndex("_id")));
-				info.setDate(cursor.getString(cursor.getColumnIndex("date")));
+				info.setDate(cursor.getString(cursor.getColumnIndex("newdate")));
 				// info.setStartTime(cursor.getString(cursor
 				// .getColumnIndex("startTime")));
 				// info.setEndTime(cursor.getString(cursor.getColumnIndex("endTime")));

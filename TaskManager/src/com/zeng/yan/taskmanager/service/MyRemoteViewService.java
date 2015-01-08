@@ -28,6 +28,15 @@ public class MyRemoteViewService extends RemoteViewsService {
 		private Context mContext;
 		private int mAppWidgetId;
 		private String date;
+		
+		public String getDate() {
+			return date;
+		}
+
+		public void setDate(String date) {
+			this.date = date;
+		}
+
 		private List<TaskDetails> data;
 
 		public MyRemoteViewsFactory(Context context, Intent intent) {
@@ -35,27 +44,24 @@ public class MyRemoteViewService extends RemoteViewsService {
 			 mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 
 		                AppWidgetManager.INVALID_APPWIDGET_ID);
 			date = intent.getStringExtra("date");
-			System.out.println("GridRemoteViewsFactory date:"
-					+ date);
-			//data = intent.get("data");
+
 		}
 
-		/**
-		 * 初始化GridView的数据
-		 * 
-		 * @author skywang
-		 */
+
 		private void initViewData() {
 			TaskDBOperator helper = new TaskDBOperator(mContext);
 			data = helper.findPart(0, 100, date, date);
+//			for (TaskDetails taskDetails : data) {
+//				System.out.println(taskDetails.toString());
+//			}
 
 		}
 
 		@Override
 		public void onCreate() {
-			initViewData();
-			System.out.println("onCreate date:"
-					+ date);
+//			initViewData();
+//			System.out.println("onCreate date:"
+//					+ date);
 		}
 		
 	
@@ -80,10 +86,7 @@ public class MyRemoteViewService extends RemoteViewsService {
 
 		@Override
 		public void onDataSetChanged() {
-			TaskDBOperator helper = new TaskDBOperator(mContext);
-			data = helper.findPart(0, 100, "2015-01-01", "2015-01-01");
-			
-			System.out.println("onDataSetChanged");
+			initViewData();
 		}
 
 		@Override
@@ -95,6 +98,7 @@ public class MyRemoteViewService extends RemoteViewsService {
 		@Override
 		public int getCount() {
 			if (data != null) {
+				//System.out.println( "data size:"+data.size());
 				return data.size();
 			}
 			return 0;

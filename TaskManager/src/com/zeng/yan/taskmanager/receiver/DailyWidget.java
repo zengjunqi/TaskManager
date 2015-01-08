@@ -3,6 +3,7 @@ package com.zeng.yan.taskmanager.receiver;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -48,26 +49,15 @@ public class DailyWidget extends AppWidgetProvider {
 			context.startActivity(intent2);
 
 		} else if (action.equals(REFRESH_ACTION)) {
-			conditonDate = dateFormat.format(new Date());
-			Toast.makeText(context, "Click Button", Toast.LENGTH_SHORT).show();
+			// conditonDate = dateFormat.format(new Date());
+			appWidgetManager.notifyAppWidgetViewDataChanged(appids, R.id.wd_lv);
 		} else if (action.equals(PRE_ACTION)) {
-			conditonDate = CalendarUtils.calculateEndDate(conditonDate, -1);
-			RemoteViews rv = new RemoteViews(context.getPackageName(),
-					R.layout.process_widget);
-			rv.setTextViewText(R.id.tv_month, conditonDate);
-			appWidgetManager.notifyAppWidgetViewDataChanged(appids[0], R.id.wd_lv);
-			appWidgetManager.updateAppWidget(appids[0], rv);
-			
-			Toast.makeText(context, "pre Button" + conditonDate,
-					Toast.LENGTH_SHORT).show();
+
 		} else if (action.equals(NEXT_ACTION)) {
-			conditonDate = CalendarUtils.calculateEndDate(conditonDate, 1);
-			Toast.makeText(context, "next Button" + conditonDate,
-					Toast.LENGTH_SHORT).show();
-			refreshData(context, appWidgetManager, appids);
+
 		}
-	
-		//appWidgetManager.notifyAppWidgetViewDataChanged(appids, R.id.wd_lv); 
+
+		// appWidgetManager.notifyAppWidgetViewDataChanged(appids, R.id.wd_lv);
 		super.onReceive(context, intent);
 	}
 
@@ -75,6 +65,7 @@ public class DailyWidget extends AppWidgetProvider {
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
 
+	//	System.out.println("widget_onUpdate:" + conditonDate);
 		// 获取AppWidget对应的视图
 		conditonDate = dateFormat.format(new Date());
 		refreshData(context, appWidgetManager, appWidgetIds);
@@ -87,7 +78,7 @@ public class DailyWidget extends AppWidgetProvider {
 		for (int appWidgetId : appWidgetIds) {
 			RemoteViews rv = new RemoteViews(context.getPackageName(),
 					R.layout.process_widget);
-			rv.setTextViewText(R.id.tv_month, conditonDate);
+			rv.setTextViewText(R.id.tv_month, conditonDate + " 日程");
 			Intent intent1 = new Intent().setAction(PRE_ACTION);
 			PendingIntent pendingIntent1 = PendingIntent.getBroadcast(context,
 					0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -113,6 +104,17 @@ public class DailyWidget extends AppWidgetProvider {
 			serviceIntent.putExtra("date", conditonDate);
 			rv.setRemoteAdapter(R.id.wd_lv, serviceIntent);
 
+			AlarmManager aManager = (AlarmManager) context
+					.getSystemService(Context.ALARM_SERVICE);
+
+			Intent intents = new Intent(context,
+					CustomerUpdateWidgetReceiver.class); // 创建Intent对象
+			// intents.setAction("com.zeng.yan.taskmanager.update.widget");
+			PendingIntent pi = PendingIntent.getBroadcast(context, 0, intents,
+					0);
+			aManager.setRepeating(AlarmManager.RTC_WAKEUP,
+					System.currentTimeMillis(), 1000 * 60 * 60, pi);// *60*24
+
 			// Intent gridIntent = new Intent();
 			// gridIntent.setAction(COLLECTION_VIEW_ACTION);
 			// gridIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -121,11 +123,12 @@ public class DailyWidget extends AppWidgetProvider {
 			// 0, gridIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			// // 设置intent模板
 			// rv.setPendingIntentTemplate(R.id.wd_lv, pendingIntent);
-			
+
 			// 调用集合管理器对集合进行更新
 			appWidgetManager.updateAppWidget(appWidgetId, rv);
 			// AppWidgetManager manager = AppWidgetManager.getInstance(context);
-			//appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds[0], R.id.wd_lv);
+			// appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds[0],
+			// R.id.wd_lv);
 
 		}
 	}

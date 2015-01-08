@@ -20,6 +20,7 @@ public class AlarmUtils {
 
 	private Context context;
 	AlarmManager aManager;
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	public AlarmUtils(Context context) {
 		this.context = context;
@@ -27,35 +28,36 @@ public class AlarmUtils {
 				.getSystemService(Context.ALARM_SERVICE);
 	}
 
-	public  void setCycleDataAlarm() {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-//		calendar.set(Calendar.HOUR_OF_DAY, 8);
+	public void setCycleDataAlarm() {
+	//	Calendar calendar = Calendar.getInstance();
+	//	calendar.setTime(new Date());
+//		calendar.set(Calendar.HOUR_OF_DAY, 1);
 //		calendar.set(Calendar.MINUTE, 0);
 //		calendar.set(Calendar.SECOND, 0);
+//		calendar.set(Calendar.MILLISECOND, 0);
 		Intent intent = new Intent(context, CycleDataReceiver.class); // 创建Intent对象
 		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-		AlarmManager aManager = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
 		aManager.setRepeating(AlarmManager.RTC_WAKEUP,
-				calendar.getTimeInMillis(), 1000 * 60*60*3, pi);//*60*24
-		System.out.println("set alarm CycleDataReceiver");
+				System.currentTimeMillis(), 1000 * 60 * 10, pi);// *60*24
 
 	}
-	
+
 	public boolean setAlarm(TaskDetails taskDetails) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
 		Calendar calendar = Calendar.getInstance();
 		try {
 			calendar.setTime(dateFormat.parse(taskDetails.getDate() + " "
 					+ taskDetails.getReminderDate()));
-			Intent intent = new Intent(context,
-					AlarmActivity.class); // 创建Intent对象
-			intent.putExtra("content", taskDetails.getContent());
-			PendingIntent pi = PendingIntent.getActivity(context,
-					taskDetails.get_id(), intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-			aManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-					pi);
+			if (System.currentTimeMillis() < calendar.getTimeInMillis()) {
+
+				Intent intent = new Intent(context, AlarmActivity.class); // 创建Intent对象
+				intent.putExtra("content", taskDetails.getContent());
+				PendingIntent pi = PendingIntent.getActivity(context,
+						taskDetails.get_id(), intent,
+						Intent.FLAG_ACTIVITY_NEW_TASK);
+				aManager.set(AlarmManager.RTC_WAKEUP,
+						calendar.getTimeInMillis(), pi);
+			}
 
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -64,13 +66,19 @@ public class AlarmUtils {
 
 		return true;
 	}
-/*	private void cancleAlarm(int id) {
-		Intent intent = new Intent(context,
-				AlarmActivity.class); // 创建Intent对象
-		PendingIntent pi = PendingIntent.getActivity(context,
-				id, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+
+	public void cancleAlarm() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		calendar.set(Calendar.HOUR_OF_DAY, 1);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		Intent intent = new Intent(context, CycleDataReceiver.class); // 创建Intent对象
+		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
 		aManager.cancel(pi);
-	}*/
+	}
+
 
 
 }

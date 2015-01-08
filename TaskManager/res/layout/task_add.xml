@@ -63,7 +63,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/xuhuan" />
+                    android:background="@drawable/type" />
 
                 <Spinner
                   android:id="@+id/sp_stype"

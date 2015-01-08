@@ -7,9 +7,10 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="17" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -25,7 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-         <activity android:name="com.zeng.yan.taskmanager.MainActivity" />
+        <activity android:name="com.zeng.yan.taskmanager.MainActivity" />
         <activity android:name="com.zeng.yan.taskmanager.AddTaskActivity" >
         </activity>
         <activity
@@ -36,28 +37,50 @@
             android:name="com.zeng.yan.taskmanager.TimerPickerActivity"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
-         <activity android:name="com.zeng.yan.taskmanager.BackRestoreActivity" />
-          <activity android:name="com.zeng.yan.taskmanager.ReplyActivity" />
-              <activity android:name="com.zeng.yan.taskmanager.AlarmActivity" />
-          <service  android:name="com.zeng.yan.taskmanager.service.UpdateWidgetService" ></service>
-            <receiver android:name="com.zeng.yan.taskmanager.receiver.DailyWidget" >
+        <activity android:name="com.zeng.yan.taskmanager.BackRestoreActivity" />
+        <activity android:name="com.zeng.yan.taskmanager.ReplyActivity" />
+        <activity android:name="com.zeng.yan.taskmanager.AlarmActivity" />
+
+        <service android:name="com.zeng.yan.taskmanager.service.UpdateWidgetService" >
+        </service>
+
+        <receiver android:name="com.zeng.yan.taskmanager.receiver.DailyWidget" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                 <action android:name="com.zeng.yan.taskmanager.refresh" />
-                  <action android:name="com.zeng.yan.taskmanager.additem" />
-                   <action android:name="com.zeng.yan.taskmanager.previous" />
-                  <action android:name="com.zeng.yan.taskmanager.next" />
+                <action android:name="com.zeng.yan.taskmanager.refresh" />
+                <action android:name="com.zeng.yan.taskmanager.additem" />
+                <action android:name="com.zeng.yan.taskmanager.previous" />
+                <action android:name="com.zeng.yan.taskmanager.next" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/process_widget_provider" />
         </receiver>
-         <service   
-            android:name="com.zeng.yan.taskmanager.service.MyRemoteViewService"  
-            android:permission="android.permission.BIND_REMOTEVIEWS" />  
-            
-         <receiver android:name="com.zeng.yan.taskmanager.receiver.CycleDataReceiver" android:process=":remote"/>
+
+        <service
+            android:name="com.zeng.yan.taskmanager.service.MyRemoteViewService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <receiver
+            android:name="com.zeng.yan.taskmanager.receiver.CycleDataReceiver"
+            android:process=":remote" />
+        <receiver android:name="com.zeng.yan.taskmanager.receiver.BootReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+                <data android:scheme="file" >
+                </data>
+            </intent-filter>
+        </receiver>
+          <receiver android:name="com.zeng.yan.taskmanager.receiver.CustomerUpdateWidgetReceiver" >
+            <intent-filter>
+                <action android:name="com.zeng.yan.taskmanager.update.widget" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

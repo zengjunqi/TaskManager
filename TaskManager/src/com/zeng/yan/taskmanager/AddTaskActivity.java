@@ -60,16 +60,18 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 				android.R.layout.simple_spinner_item, cycle);
 		adpt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sp_cycle.setAdapter(adpt);
-
+		
+		ArrayAdapter adpt2 = new ArrayAdapter(this,
+				android.R.layout.simple_spinner_item, type);
+		adpt2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		sp_type.setAdapter(adpt2);
+		
 		ArrayAdapter adpt1 = new ArrayAdapter(this,
 				android.R.layout.simple_spinner_item, reminder);
 		adpt1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sp_reminder.setAdapter(adpt1);
 
-		ArrayAdapter adpt2 = new ArrayAdapter(this,
-				android.R.layout.simple_spinner_item, type);
-		adpt1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		sp_type.setAdapter(adpt2);
+
 
 		et_date.setOnClickListener(this);
 		et_startTimer.setOnClickListener(this);
@@ -294,19 +296,22 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 		}else {
 			id=dbOperator.findMaxid();
 		}
-		System.out.println("**id:"+id);
+		//System.out.println("**id:"+id);
 		Calendar calendar = Calendar.getInstance();
 		try {
 			calendar.setTime(dateFormat.parse(taskDetails.getDate() + " "
 					+ taskDetails.getReminderDate()));
-			Intent intent = new Intent(AddTaskActivity.this,
-					AlarmActivity.class); // 创建Intent对象
-			intent.putExtra("content", taskDetails.getContent());
-			PendingIntent pi = PendingIntent.getActivity(AddTaskActivity.this,
-					id, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-			AlarmManager aManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-			aManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-					pi);
+			if (System.currentTimeMillis()<calendar.getTimeInMillis()) {
+				
+				Intent intent = new Intent(AddTaskActivity.this,
+						AlarmActivity.class); // 创建Intent对象
+				intent.putExtra("content", taskDetails.getContent());
+				PendingIntent pi = PendingIntent.getActivity(AddTaskActivity.this,
+						id, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+				AlarmManager aManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+				aManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+						pi);
+			}
 
 		} catch (ParseException e) {
 			e.printStackTrace();

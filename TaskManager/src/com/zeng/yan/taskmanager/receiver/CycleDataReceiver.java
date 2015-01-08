@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.zeng.yan.taskmanager.AlarmActivity;
 import com.zeng.yan.taskmanager.bean.TaskDetails;
 import com.zeng.yan.taskmanager.db.TaskDBOperator;
 import com.zeng.yan.taskmanager.utils.AlarmUtils;
@@ -21,23 +22,32 @@ public class CycleDataReceiver extends BroadcastReceiver {
 		TaskDBOperator operator = new TaskDBOperator(context);
 		// 如果没有跑循环,则取得循环数据,更新数据库,并标记已循环
 		String date = dateFormat.format(new Date());
-	
+		String value="收到广播";
+
 		if (operator.checkCycle(date) == false) {
 
 			if (operator.cycleData(date)) {
-				operator.addCycle(date);
+				 value="收到广播并处理数据";
 				List<TaskDetails> tasks = operator.findAll(date);
-				 AlarmUtils alarmUtils=new AlarmUtils(context);
+				AlarmUtils alarmUtils = new AlarmUtils(context);
 				for (TaskDetails taskDetails : tasks) {
-					 alarmUtils.setAlarm(taskDetails);
-					System.out.println(taskDetails);
+					alarmUtils.setAlarm(taskDetails);
+					 value="收到广播并处理数据,且有设置闹钟";
+				}
+				if (tasks.size() > 0) {
+					operator.addCycle(date);
+					
 				}
 			}
-			Toast.makeText(context, "更新了", 0).show();
+			Toast.makeText(context, "*更新了", 0).show();
 			System.out.println("***更新了**");
 		}
-		Toast.makeText(context, "收到广播了", 0).show();
 		System.out.println("***收到广播了**");
+		Toast.makeText(context, "**收到广播了*", 0).show();
+//		Intent itIntent = new Intent(context, AlarmActivity.class);
+//		itIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//		itIntent.putExtra("content", value);
+//		context.startActivity(itIntent);
 	}
 
 }
