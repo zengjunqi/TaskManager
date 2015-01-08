@@ -38,7 +38,7 @@ public class AlarmUtils {
 		Intent intent = new Intent(context, CycleDataReceiver.class); // 创建Intent对象
 		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
 		aManager.setRepeating(AlarmManager.RTC_WAKEUP,
-				System.currentTimeMillis(), 1000 * 60 * 10, pi);// *60*24
+				System.currentTimeMillis(), 1000 * 60 * 60*4, pi);// *60*24
 
 	}
 

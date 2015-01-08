@@ -84,8 +84,8 @@ public class ChatFragment extends Fragment {
 				ViewGroup.LayoutParams.MATCH_PARENT);// (650, 650);
 		lp1.addRule(RelativeLayout.CENTER_HORIZONTAL,
 				RelativeLayout.CENTER_HORIZONTAL);
-		// lp1.addRule(RelativeLayout.CENTER_IN_PARENT,
-		// RelativeLayout.CENTER_IN_PARENT);
+		 lp1.addRule(RelativeLayout.CENTER_VERTICAL,
+		 RelativeLayout.CENTER_VERTICAL);
 		lp1.topMargin = 10;
 		layout.addView(graphicalView, lp1);
 	}

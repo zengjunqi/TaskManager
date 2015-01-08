@@ -30,6 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/content"
+                android:maxLength="20"
                 android:hint="请输入待办事项..." />
 
             <RelativeLayout

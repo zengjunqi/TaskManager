@@ -140,6 +140,7 @@ public class SplashActivity extends Activity {
 			AlarmUtils alarmUtils = new AlarmUtils(this);
 			alarmUtils.setCycleDataAlarm();
 			Editor editor = sp.edit();
+			editor.putBoolean("update", true);
 			editor.putBoolean("alarm", true);
 			editor.commit();
 
@@ -252,7 +253,7 @@ public class SplashActivity extends Activity {
 				if (file.exists()) {
 					file.delete();
 				}
-
+				System.out.println("apk url:"+versionInfo.getApkurl());
 				HttpUtils http = new HttpUtils();
 				HttpHandler httpHandler = http.download(
 						versionInfo.getApkurl(),

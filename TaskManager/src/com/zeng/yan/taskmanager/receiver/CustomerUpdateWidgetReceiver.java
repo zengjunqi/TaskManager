@@ -27,15 +27,10 @@ public class CustomerUpdateWidgetReceiver extends BroadcastReceiver {
 				R.layout.process_widget);
 		rv.setTextViewText(R.id.tv_month, conditonDate + " 日程");
 
-		// Intent serviceIntent = new Intent(context,
-		// MyRemoteViewService.class);
-		// serviceIntent.putExtra("date", conditonDate);
-		// rv.setRemoteAdapter(R.id.wd_lv, serviceIntent);
-
 		awm.notifyAppWidgetViewDataChanged(appids, R.id.wd_lv);
 		awm.updateAppWidget(provider, rv);
 
-		System.out.println("自定议更新widget了.....");
+		//System.out.println("自定议更新widget了.....");
 	}
 
 }
