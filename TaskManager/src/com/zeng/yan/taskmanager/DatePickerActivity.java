@@ -2,18 +2,14 @@ package com.zeng.yan.taskmanager;
 
 import java.util.Calendar;
 
-import android.R.integer;
-import android.R.string;
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.view.Window;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.DatePicker.OnDateChangedListener;
 
 public class DatePickerActivity extends Activity {
 	private DatePicker datePicker;
@@ -21,13 +17,46 @@ public class DatePickerActivity extends Activity {
 	private String selectDateString = "";
 	String monthString = "";
 	String dayString;
+	private OnDateSetListener changerListener;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.datapicker);
+		final Calendar c = Calendar.getInstance();
+		int mYear = c.get(Calendar.YEAR);
+		int mMonth = c.get(Calendar.MONTH);
+		int mDay = c.get(Calendar.DAY_OF_MONTH);
+		// new DatePickerDialog()
+		changerListener=new OnDateSetListener() {
+			
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear,
+					int dayOfMonth) {
+				System.out.println("year"+year+"monthOfYear"+monthOfYear+"monthOfYear"+dayOfMonth);
+				int ccmonth = monthOfYear + 1;
+				 monthString = String.valueOf(ccmonth);
+				if (monthString.length() == 1) {
+					monthString = "0" + monthString;
+				}
+				 dayString = String.valueOf(dayOfMonth);
+				if (dayString.length() == 1) {
+					dayString = "0" + dayString;
+				}
+				selectDateString = year + "-" + monthString + "-" + dayString;
+				Intent data = new Intent();
+				data.putExtra("date", selectDateString);
+				setResult(0, data);
+				System.out.println(selectDateString);
+				finish();
+				
+			}
+		};
+		new DatePickerDialog(DatePickerActivity.this,
+				changerListener, mYear, mMonth, mDay).show();
+
+	/*	setContentView(R.layout.datapicker);
 		datePicker = (DatePicker) findViewById(R.id.dpPicker);
 		Calendar c = Calendar.getInstance();// 获得系统当前日期
 		int cyear = c.get(Calendar.YEAR);
@@ -71,9 +100,9 @@ public class DatePickerActivity extends Activity {
 		btOk = (Button) findViewById(R.id.btn_pickOK);
 		btCancel = (Button) findViewById(R.id.btn_pickCancel);
 		btOk.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
+				datePicker.clearFocus();//为了能在编辑状态下也取到值
 				Intent data = new Intent();
 				data.putExtra("date", selectDateString);
 				setResult(0, data);
@@ -87,6 +116,7 @@ public class DatePickerActivity extends Activity {
 			public void onClick(View v) {
 				finish();
 			}
-		});
+		});*/
 	}
+
 }

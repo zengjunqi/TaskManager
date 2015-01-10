@@ -39,8 +39,8 @@ public class BootReceiver extends BroadcastReceiver {
 	
 	private void setAlarm(Context context) {
 		AlarmUtils alarmUtils=new AlarmUtils(context);
-		//alarmUtils.cancleAlarm();
 		alarmUtils.setCycleDataAlarm();
+	//	alarmUtils.setUpdateWidgetAlarm();
 	}
 	
 

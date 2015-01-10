@@ -113,7 +113,7 @@ public class DailyWidget extends AppWidgetProvider {
 			PendingIntent pi = PendingIntent.getBroadcast(context, 0, intents,
 					0);
 			aManager.setRepeating(AlarmManager.RTC_WAKEUP,
-					System.currentTimeMillis(), 1000 * 60 * 60, pi);// *60*24
+					System.currentTimeMillis(), 1000 * 60*60, pi);// *60*24
 
 			// Intent gridIntent = new Intent();
 			// gridIntent.setAction(COLLECTION_VIEW_ACTION);

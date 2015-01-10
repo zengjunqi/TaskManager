@@ -18,6 +18,7 @@ public class TimerPickerActivity extends Activity {
 	private String selectTimeString = "";
 	String hourString = "";
 	String minuteString;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -32,13 +33,13 @@ public class TimerPickerActivity extends Activity {
 		timePicker.setCurrentHour(hour);
 		timePicker.setCurrentMinute(minutes);
 		hourString = String.valueOf(hour);
-			if (hourString.length() == 1) {
-				hourString = "0" + hourString;
-			}
-			minuteString = String.valueOf(minutes);
-			if (minuteString.length() == 1) {
-				minuteString = "0" + minuteString;
-			}
+		if (hourString.length() == 1) {
+			hourString = "0" + hourString;
+		}
+		minuteString = String.valueOf(minutes);
+		if (minuteString.length() == 1) {
+			minuteString = "0" + minuteString;
+		}
 		selectTimeString = hourString + ":" + minuteString;
 		timePicker
 				.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
@@ -53,7 +54,7 @@ public class TimerPickerActivity extends Activity {
 						if (minuteString.length() == 1) {
 							minuteString = "0" + minuteString;
 						}
-					selectTimeString = hourString + ":" + minuteString;
+						selectTimeString = hourString + ":" + minuteString;
 					}
 				});
 		btOk = (Button) findViewById(R.id.btn_pickOK);
@@ -62,6 +63,7 @@ public class TimerPickerActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				timePicker.clearFocus();
 				Intent data = new Intent();
 				data.putExtra("time", selectTimeString);
 				setResult(1, data);

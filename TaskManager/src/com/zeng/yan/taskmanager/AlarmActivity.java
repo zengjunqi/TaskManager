@@ -16,7 +16,7 @@ public class AlarmActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Intent intent=getIntent();
 		String content=intent.getStringExtra("content");
-		final MediaPlayer player = MediaPlayer.create(this, R.raw.als);
+		final MediaPlayer player = MediaPlayer.create(this, R.raw.app);
 		player.setLooping(true);//
 		player.setVolume(1.0f, 1.0f);
 		player.start();

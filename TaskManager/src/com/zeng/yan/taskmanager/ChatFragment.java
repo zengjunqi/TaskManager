@@ -61,13 +61,14 @@ public class ChatFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 		helper = new TaskDBOperator(getActivity());
 		conditionDate=dateFormat.format(new Date());//当前日
-		conditionMonth=monthFormat.format(new Date());//当前月
+		
 		conditonPeriod = CalendarUtils.getDatePeriod(
 				dateFormat.format(new Date()), 2);
 		ivLeft = (ImageView) getActivity().findViewById(R.id.chat_iv1);
 		ivRight = (ImageView) getActivity().findViewById(R.id.chat_iv2);
 		tvMonth = (TextView) getActivity().findViewById(R.id.chat_month);
-		tvMonth.setText(conditionMonth);
+		String[] datef = conditionDate.split("-");
+		tvMonth.setText(datef[0]+"年-"+datef[1]+"月");
 		initChat();
 		ivLeft.setOnClickListener(new OnClickListener() {
 
@@ -91,10 +92,10 @@ public class ChatFragment extends Fragment {
 		});
 	}
 	private void changeMonthChatData() {
-		System.out.println(conditionMonth+"==="+conditionDate);
+		//System.out.println(conditionMonth+"==="+conditionDate);
 		//conditionMonth=monthFormat.format(conditionDate);
 		String[] datef = conditionDate.split("-");
-		tvMonth.setText(datef[0]+" - "+datef[1]);
+		tvMonth.setText(datef[0]+"年-"+datef[1]+"月");
 		conditonPeriod = CalendarUtils.getDatePeriod(
 				conditionDate, 2);
 		changeItemData();
@@ -181,7 +182,7 @@ public class ChatFragment extends Fragment {
 			renderer = buildCategoryRenderer(noData, colors);
 			graphicalView.repaint();
 			graphicalView.invalidate();
-			System.out.println("重画了.");
+			//System.out.println("重画了.");
 			updateFlag = false;
 		}
 	}
@@ -212,8 +213,8 @@ public class ChatFragment extends Fragment {
 			renderer.setLabelsTextSize(30);// 饼图上标记文字的字体大小
 			renderer.setLabelsColor(Color.parseColor("#33B6EA"));// 饼图上标记文字的颜色33B6EA
 			renderer.setPanEnabled(false);// 设置是否可以平移
-			renderer.setChartTitleTextSize(40);// 设置图表标题的文字大小
-			renderer.setChartTitle("按月统计结果");// 设置图表的标题 默认是居中顶部显示
+			//renderer.setChartTitleTextSize(40);// 设置图表标题的文字大小
+			//renderer.setChartTitle("按月统计结果");// 设置图表的标题 默认是居中顶部显示
 			SimpleSeriesRenderer simpleSeriesRendererNoData = new SimpleSeriesRenderer();
 			simpleSeriesRendererNoData.setChartValuesFormat(NumberFormat
 					.getPercentInstance());//
@@ -221,8 +222,8 @@ public class ChatFragment extends Fragment {
 			renderer.addSeriesRenderer(simpleSeriesRendererNoData);
 		} else {
 
-			renderer.setChartTitleTextSize(40);// 设置图表标题的文字大小
-			renderer.setChartTitle("按月统计结果");// 设置图表的标题 默认是居中顶部显示
+			//renderer.setChartTitleTextSize(40);// 设置图表标题的文字大小
+			//renderer.setChartTitle("按月统计结果");// 设置图表的标题 默认是居中顶部显示
 			renderer.setLegendTextSize(30);// 设置左下角表注的文字大小
 			// renderer.setZoomButtonsVisible(true);//设置显示放大缩小按钮
 			renderer.setZoomEnabled(false);// 设置不允许放大缩小.

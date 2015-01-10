@@ -8,6 +8,7 @@ import java.util.Date;
 import com.zeng.yan.taskmanager.AddTaskActivity;
 import com.zeng.yan.taskmanager.AlarmActivity;
 import com.zeng.yan.taskmanager.bean.TaskDetails;
+import com.zeng.yan.taskmanager.receiver.CustomerUpdateWidgetReceiver;
 import com.zeng.yan.taskmanager.receiver.CycleDataReceiver;
 
 import android.R.integer;
@@ -29,17 +30,24 @@ public class AlarmUtils {
 	}
 
 	public void setCycleDataAlarm() {
-	//	Calendar calendar = Calendar.getInstance();
-	//	calendar.setTime(new Date());
-//		calendar.set(Calendar.HOUR_OF_DAY, 1);
-//		calendar.set(Calendar.MINUTE, 0);
-//		calendar.set(Calendar.SECOND, 0);
-//		calendar.set(Calendar.MILLISECOND, 0);
+		// Calendar calendar = Calendar.getInstance();
+		// calendar.setTime(new Date());
+		// calendar.set(Calendar.HOUR_OF_DAY, 1);
+		// calendar.set(Calendar.MINUTE, 0);
+		// calendar.set(Calendar.SECOND, 0);
+		// calendar.set(Calendar.MILLISECOND, 0);
 		Intent intent = new Intent(context, CycleDataReceiver.class); // 创建Intent对象
 		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
 		aManager.setRepeating(AlarmManager.RTC_WAKEUP,
-				System.currentTimeMillis(), 1000 * 60 * 60*4, pi);// *60*24
+				System.currentTimeMillis(), 1000 * 60 * 60 * 4, pi);// *60*24
 
+	}
+
+	public void setUpdateWidgetAlarm() {
+		Intent intents = new Intent(context, CustomerUpdateWidgetReceiver.class); // 创建Intent对象
+		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intents, 0);
+		aManager.setRepeating(AlarmManager.RTC_WAKEUP,
+				System.currentTimeMillis(), 1000 * 60 * 60, pi);
 	}
 
 	public boolean setAlarm(TaskDetails taskDetails) {
@@ -78,7 +86,5 @@ public class AlarmUtils {
 		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
 		aManager.cancel(pi);
 	}
-
-
 
 }

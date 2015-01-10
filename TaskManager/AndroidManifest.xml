@@ -29,14 +29,14 @@
         <activity android:name="com.zeng.yan.taskmanager.MainActivity" />
         <activity android:name="com.zeng.yan.taskmanager.AddTaskActivity" >
         </activity>
-        <activity
+      <!--   <activity
             android:name="com.zeng.yan.taskmanager.DatePickerActivity"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
         <activity
             android:name="com.zeng.yan.taskmanager.TimerPickerActivity"
             android:theme="@android:style/Theme.Dialog" >
-        </activity>
+        </activity> -->
         <activity android:name="com.zeng.yan.taskmanager.BackRestoreActivity" />
         <activity android:name="com.zeng.yan.taskmanager.ReplyActivity" />
         <activity android:name="com.zeng.yan.taskmanager.AlarmActivity" />

@@ -30,7 +30,7 @@ public class CustomerUpdateWidgetReceiver extends BroadcastReceiver {
 		awm.notifyAppWidgetViewDataChanged(appids, R.id.wd_lv);
 		awm.updateAppWidget(provider, rv);
 
-		//System.out.println("自定议更新widget了.....");
+		System.out.println("自定议更新widget了.....");
 	}
 
 }

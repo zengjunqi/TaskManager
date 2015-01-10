@@ -7,7 +7,11 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.DatePickerDialog;
 import android.app.PendingIntent;
+import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,8 +23,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.zeng.yan.taskmanager.R.string;
@@ -43,6 +49,9 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 	private String oper;
 	TaskDBOperator dbOperator;
 	private int taskId;
+	private OnDateSetListener changerListener;
+	DatePickerDialog datePickerDialog;
+	String timeString = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,18 +69,16 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 				android.R.layout.simple_spinner_item, cycle);
 		adpt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sp_cycle.setAdapter(adpt);
-		
+
 		ArrayAdapter adpt2 = new ArrayAdapter(this,
 				android.R.layout.simple_spinner_item, type);
 		adpt2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sp_type.setAdapter(adpt2);
-		
+
 		ArrayAdapter adpt1 = new ArrayAdapter(this,
 				android.R.layout.simple_spinner_item, reminder);
 		adpt1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sp_reminder.setAdapter(adpt1);
-
-
 
 		et_date.setOnClickListener(this);
 		et_startTimer.setOnClickListener(this);
@@ -156,19 +163,24 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 
 		case R.id.et_tastDate:
-
-			intent = new Intent(AddTaskActivity.this, DatePickerActivity.class);
-			startActivityForResult(intent, 0);
+			createDetePickerDialog();
+			// intent = new Intent(AddTaskActivity.this,
+			// DatePickerActivity.class);
+			// startActivityForResult(intent, 0);
 			break;
 		case R.id.et_startTimer:
-
-			intent = new Intent(AddTaskActivity.this, TimerPickerActivity.class);
-			startActivityForResult(intent, 1);
+			creatTimerPickerDialog(R.id.et_startTimer);
+			// et_startTimer.setText(timeString);
+			// intent = new Intent(AddTaskActivity.this,
+			// TimerPickerActivity.class);
+			// startActivityForResult(intent, 1);
 			break;
 		case R.id.et_endTimer:
-
-			intent = new Intent(AddTaskActivity.this, TimerPickerActivity.class);
-			startActivityForResult(intent, 2);
+			creatTimerPickerDialog(R.id.et_endTimer);
+			et_endTimer.setText(timeString);
+			// intent = new Intent(AddTaskActivity.this,
+			// TimerPickerActivity.class);
+			// startActivityForResult(intent, 2);
 			break;
 		case R.id.btn_add:
 			if (TextUtils.isEmpty(et_content.getText())) {
@@ -188,9 +200,9 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 								.show();
 					}
 					if (sp_reminder.getSelectedItemPosition() > 0) {
-						
+
 						setAlarm(task);
-					}else if ("update".equals(oper)) {
+					} else if ("update".equals(oper)) {
 						cancleAlarm(taskId);
 					}
 					finish();
@@ -202,6 +214,70 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 		default:
 			break;
 		}
+	}
+
+	private void creatTimerPickerDialog(final int id) {
+		OnTimeSetListener oslListener = new OnTimeSetListener() {
+
+			@Override
+			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+				String hourString = String.valueOf(hourOfDay);
+				timeString = formateDateOrTime(String.valueOf(hourOfDay)) + ":"
+						+ formateDateOrTime(String.valueOf(minute));
+				if (id == R.id.et_startTimer) {
+					et_startTimer.setText(timeString);
+				} else if (id == R.id.et_endTimer) {
+					et_endTimer.setText(timeString);
+				}
+			}
+		};
+		Calendar calendar = Calendar.getInstance();
+		int hours = calendar.get(Calendar.HOUR_OF_DAY);
+		int minute = calendar.get(Calendar.MINUTE);
+		new TimePickerDialog(this, oslListener, hours, minute, true).show();
+		timeString = formateDateOrTime(hours + "") + ":"
+				+ formateDateOrTime(minute + "");
+
+	}
+
+	private String formateDateOrTime(String str) {
+		if (str.length() == 1) {
+			str = "0" + str;
+		}
+		return str;
+	}
+
+	private void createDetePickerDialog() {
+		final Calendar c = Calendar.getInstance();
+		int mYear = c.get(Calendar.YEAR);
+		int mMonth = c.get(Calendar.MONTH);
+		int mDay = c.get(Calendar.DAY_OF_MONTH);
+		// new DatePickerDialog()
+		changerListener = new OnDateSetListener() {
+
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear,
+					int dayOfMonth) {
+				System.out.println("year" + year + "monthOfYear" + monthOfYear
+						+ "monthOfYear" + dayOfMonth);
+				int ccmonth = monthOfYear + 1;
+				String monthString = String.valueOf(ccmonth);
+				if (monthString.length() == 1) {
+					monthString = "0" + monthString;
+				}
+				String dayString = String.valueOf(dayOfMonth);
+				if (dayString.length() == 1) {
+					dayString = "0" + dayString;
+				}
+				String selectDateString = year + "-" + monthString + "-"
+						+ dayString;
+				et_date.setText(selectDateString);
+
+			}
+		};
+		datePickerDialog = new DatePickerDialog(this, changerListener, mYear,
+				mMonth, mDay);
+		datePickerDialog.show();
 	}
 
 	private TaskDetails getMyTask() {
@@ -268,49 +344,53 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (sp_cycle.getSelectedItemPosition()>0) {
-			if (sp_cycle.getSelectedItemPosition()==1) {
+		if (sp_cycle.getSelectedItemPosition() > 0) {
+			if (sp_cycle.getSelectedItemPosition() == 1) {
 				taskDetails.setExpireDate("2099-12-31");
-			}else {
-				
-				String conditonPeriod = CalendarUtils.getDatePeriod(taskDetails.getDate(), sp_cycle.getSelectedItemPosition()-1);
+			} else {
+
+				String conditonPeriod = CalendarUtils.getDatePeriod(
+						taskDetails.getDate(),
+						sp_cycle.getSelectedItemPosition() - 1);
 				String[] period = conditonPeriod.split(";");
 				taskDetails.setExpireDate(period[1]);
 			}
 		}
-		
+
 		return taskDetails;
 
 	}
 
 	private void getExpireDate(String date) {
-		String conditonPeriod = CalendarUtils.getDatePeriod(date, sp_cycle.getSelectedItemPosition());
+		String conditonPeriod = CalendarUtils.getDatePeriod(date,
+				sp_cycle.getSelectedItemPosition());
 		String[] period = conditonPeriod.split(";");
 	}
-	
+
 	private boolean setAlarm(TaskDetails taskDetails) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		int id = 0;
 		if ("update".equals(oper)) {
 			id = taskId;
-		}else {
-			id=dbOperator.findMaxid();
+		} else {
+			id = dbOperator.findMaxid();
 		}
-		//System.out.println("**id:"+id);
+		// System.out.println("**id:"+id);
 		Calendar calendar = Calendar.getInstance();
 		try {
 			calendar.setTime(dateFormat.parse(taskDetails.getDate() + " "
 					+ taskDetails.getReminderDate()));
-			if (System.currentTimeMillis()<calendar.getTimeInMillis()) {
-				
+			if (System.currentTimeMillis() < calendar.getTimeInMillis()) {
+
 				Intent intent = new Intent(AddTaskActivity.this,
 						AlarmActivity.class); // 创建Intent对象
 				intent.putExtra("content", taskDetails.getContent());
-				PendingIntent pi = PendingIntent.getActivity(AddTaskActivity.this,
-						id, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+				PendingIntent pi = PendingIntent.getActivity(
+						AddTaskActivity.this, id, intent,
+						Intent.FLAG_ACTIVITY_NEW_TASK);
 				AlarmManager aManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-				aManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-						pi);
+				aManager.set(AlarmManager.RTC_WAKEUP,
+						calendar.getTimeInMillis(), pi);
 			}
 
 		} catch (ParseException e) {
@@ -320,11 +400,11 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 
 		return true;
 	}
+
 	private void cancleAlarm(int id) {
-		Intent intent = new Intent(AddTaskActivity.this,
-				AlarmActivity.class); // 创建Intent对象
-		PendingIntent pi = PendingIntent.getActivity(AddTaskActivity.this,
-				id, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+		Intent intent = new Intent(AddTaskActivity.this, AlarmActivity.class); // 创建Intent对象
+		PendingIntent pi = PendingIntent.getActivity(AddTaskActivity.this, id,
+				intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 		AlarmManager aManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		aManager.cancel(pi);
 	}

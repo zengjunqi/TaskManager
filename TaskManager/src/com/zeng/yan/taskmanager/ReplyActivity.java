@@ -13,7 +13,7 @@ public class ReplyActivity extends Activity {
 		setContentView(R.layout.helper);
 		TextView tView=(TextView) findViewById(R.id.help_v);
 		try {
-			tView.setText("ëº±¾: "+getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+			tView.setText("°æ±¾: "+getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
 		} catch (NameNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
