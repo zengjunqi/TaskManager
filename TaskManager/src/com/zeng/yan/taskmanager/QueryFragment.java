@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -29,13 +30,14 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.zeng.yan.taskmanager.MainFragment.Mylistener;
 import com.zeng.yan.taskmanager.adapter.MySpnnerAdapter;
 import com.zeng.yan.taskmanager.bean.TaskDetails;
 import com.zeng.yan.taskmanager.db.TaskDBOperator;
 import com.zeng.yan.taskmanager.utils.CalendarUtils;
 
 public class QueryFragment extends Fragment implements OnClickListener {
-	private String[] condition = { "日","周","月" };// , "这周", "这月"
+	private String[] condition = { "日", "周", "月" };// , "这周", "这月"
 	private String[] cycle = { "不重复", "每天", "每周", "每月", "每年" };
 	int[] colors = new int[7];
 	private ListView lv;
@@ -52,7 +54,12 @@ public class QueryFragment extends Fragment implements OnClickListener {
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	private String condtion;
 	private int flag = 0;// 0为天查询,1为周查询,2为月查询
-private TextView tvCondtion;
+	private TextView tvCondtion;
+	private DataChangelistener listener;
+	public interface DataChangelistener {
+		public void setChange();
+	}
+
 	public String getCondtion() {
 		return condtion;
 	}
@@ -61,6 +68,11 @@ private TextView tvCondtion;
 		this.condtion = condtion;
 	}
 
+	@Override
+	public void onAttach(Activity activity) {
+		listener=(DataChangelistener) activity;
+		super.onAttach(activity);
+	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -81,10 +93,10 @@ private TextView tvCondtion;
 		 * (android.R.layout.simple_spinner_dropdown_item);
 		 * spCondition.setAdapter(adpt);
 		 */
-		tvCondtion=(TextView) getActivity().findViewById(R.id.tv_conditon);
+		tvCondtion = (TextView) getActivity().findViewById(R.id.tv_conditon);
 		String date = dateFormat.format(new Date());
 		tvCondtion.setText(CalendarUtils.getDateFormate(date, true));
-//		setConditon();
+		// setConditon();
 		spAdapter = new MySpnnerAdapter(getActivity(), condition);
 		spCondition.setAdapter(spAdapter);
 		// dapter.notifyDataSetChanged();
@@ -103,19 +115,23 @@ private TextView tvCondtion;
 		// fillListViewData();
 		// dapter = new MyListAdapter(getActivity(), list);
 		// lv.setAdapter(dapter);
-		
-		  spCondition.setOnItemSelectedListener(new OnItemSelectedListener() {
-		
-		 @Override public void onItemSelected(AdapterView<?> parent, View
-		 view, int position, long id) { //
-			 conditonDate = dateFormat.format(new
-		  Date()); fillListViewData(); }
-		  
-		 @Override public void onNothingSelected(AdapterView<?> parent) { //
-		 // TODO Auto-generated method stub
-		 
-		 } });
-		 
+
+		spCondition.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) { //
+				conditonDate = dateFormat.format(new Date());
+				fillListViewData();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) { //
+				// TODO Auto-generated method stub
+
+			}
+		});
+
 		colors[0] = Color.parseColor(getActivity().getResources().getString(
 				R.string.health));
 		colors[1] = Color.parseColor(getActivity().getResources().getString(
@@ -131,7 +147,6 @@ private TextView tvCondtion;
 		colors[6] = Color.parseColor(getActivity().getResources().getString(
 				R.string.interest));
 	}
-
 
 	/**
 	 * main fragment调用时执行
@@ -179,6 +194,7 @@ private TextView tvCondtion;
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		fillListViewData();// 更新时
+		listener.setChange();
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -189,22 +205,26 @@ private TextView tvCondtion;
 	}
 
 	private void fillListViewData() {
-		flag=spCondition.getSelectedItemPosition();
+		flag = spCondition.getSelectedItemPosition();
 		String conditonPeriod = CalendarUtils.getDatePeriod(conditonDate, flag);
 		String[] period = conditonPeriod.split(";");
-		//System.out.println(conditonPeriod);
+		// System.out.println(conditonPeriod);
 
 		periodStartDate = period[0];
 		periodEndDate = period[1];
 		if (flag == 0) {
-			//condition[0] = CalendarUtils.getDateFormate(periodStartDate, true);
-			tvCondtion.setText(CalendarUtils.getDateFormate(periodStartDate, true));
+			// condition[0] = CalendarUtils.getDateFormate(periodStartDate,
+			// true);
+			tvCondtion.setText(CalendarUtils.getDateFormate(periodStartDate,
+					true));
 		} else {
-			tvCondtion.setText(CalendarUtils.getDateFormate(periodStartDate, false)
-					+ "-" + CalendarUtils.getDateFormate(periodEndDate, false));
+			tvCondtion.setText(CalendarUtils.getDateFormate(periodStartDate,
+					false)
+					+ "-"
+					+ CalendarUtils.getDateFormate(periodEndDate, false));
 		}
 		//
-		//spAdapter.notifyDataSetChanged();
+		// spAdapter.notifyDataSetChanged();
 		if (list != null) {
 			list.clear();
 			list.addAll(dbOperator
@@ -221,9 +241,9 @@ private TextView tvCondtion;
 		} else {//
 			dapter.notifyDataSetChanged(); // 动态更新ListView
 		}
-//		for (TaskDetails ts : list) {
-//			System.out.println(ts.toString());
-//		}
+		// for (TaskDetails ts : list) {
+		// System.out.println(ts.toString());
+		// }
 
 		// dapter = new MyListAdapter(getActivity(), list);
 		// lv.setAdapter(dapter);
@@ -314,18 +334,13 @@ private TextView tvCondtion;
 
 			LayoutParams params = (LayoutParams) holder.tl_iv_timedot
 					.getLayoutParams();
-			// LayoutParams params1 = (LayoutParams) holder.tl_iv_datedot
-			// .getLayoutParams();
 			if (position == 0) {
-				// params1.addRule(RelativeLayout.ALIGN_TOP, R.id.tl_title);
-				// params1.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.tl_title);
 				params.addRule(RelativeLayout.ALIGN_TOP, R.id.tl_ll_contenter);
 				params.addRule(RelativeLayout.ALIGN_BOTTOM,
 						R.id.tl_ll_contenter);
 
 				holder.tl_tv_date_time.setText(list.get(position).getDate());
-//				System.out.println("title0*****" + position + "*"
-//						+ list.get(position).getDate());
+				holder.tl_title.setVisibility(View.VISIBLE);
 
 			} else {
 				if (list.get(position).getDate()
@@ -335,12 +350,12 @@ private TextView tvCondtion;
 							R.id.tl_ll_contenter);
 					params.addRule(RelativeLayout.ALIGN_BOTTOM,
 							R.id.tl_ll_contenter);
-//					System.out.println("Content*****" + position + "*"
-//							+ list.get(position).getDate() + "**"
-//							+ list.get(position).getContent());
+					// System.out.println("Content*****" + position + "*"
+					// + list.get(position).getDate() + "**"
+					// + list.get(position).getContent());
 				} else {
-//					System.out.println("othertitle*****" + position + "*"
-//							+ list.get(position).getDate());
+					// System.out.println("othertitle*****" + position + "*"
+					// + list.get(position).getDate());
 					holder.tl_title.setVisibility(View.VISIBLE);
 					holder.tl_tv_date_time
 							.setText(list.get(position).getDate());
@@ -378,7 +393,8 @@ private TextView tvCondtion;
 				holder.tl_iv_cycle.setVisibility(View.VISIBLE);
 				holder.tl_cycle.setText(cycle[list.get(position).getCycle()]);
 			}
-			 holder.tl_tv_content.setTextColor(colors[list.get(position).getType()]);
+			holder.tl_tv_content.setTextColor(colors[list.get(position)
+					.getType()]);
 
 			holder.tl_ll_content
 					.setOnLongClickListener(new OnLongClickListener() {
@@ -428,6 +444,7 @@ private TextView tvCondtion;
 																list.remove(position);
 																// 通知listview数据适配器更新
 																dapter.notifyDataSetChanged();
+																listener.setChange();
 															}
 														});
 												builder.setNegativeButton("取消",

@@ -19,11 +19,12 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.zeng.yan.taskmanager.MainFragment.Mylistener;
+import com.zeng.yan.taskmanager.QueryFragment.DataChangelistener;
 import com.zeng.yan.taskmanager.ui.TitleBar;
 import com.zeng.yan.taskmanager.ui.TitleBar.titleBarClickListener;
 
-public class MainActivity extends FragmentActivity implements OnClickListener,
-		Mylistener {
+public class MainActivity extends FragmentActivity implements OnClickListener,DataChangelistener
+		 {
 	// private ImageView mTabline;
 	private ViewPager viewPager;
 	private FragmentPagerAdapter fragmentPagerAdapter;
@@ -122,7 +123,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(MainActivity.this,
 						AddTaskActivity.class);
-				startActivity(intent);
+				startActivityForResult(intent, 0);
 			}
 
 			@Override
@@ -160,31 +161,36 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		}
 
 	}
-
+	
 	@Override
-	public void setChange(int datePeriod) {
+	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
 		// TODO Auto-generated method stub
-		viewPager.setCurrentItem(1);
+		super.onActivityResult(arg0, arg1, arg2);
+		refreshChat();
 
-//		android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-//		QueryFragment qf = (QueryFragment) fm.findFragmentByTag("");
-		//Toast.makeText(this, datePeriod, Toast.LENGTH_SHORT).show();
+	}
 
-		QueryFragment qf = (QueryFragment) getSupportFragmentManager()
-				.findFragmentByTag("android:switcher:" + R.id.vp + ":1");
+	private void refreshChat() {
+		ChatFragment qf = (ChatFragment) getSupportFragmentManager()
+				.findFragmentByTag("android:switcher:" + R.id.vp + ":0");
 
 		if (qf != null) // 可能没有实例化
-
 		{
-
 			if (qf.getView() != null)
 
 			{
-
-				qf.setCondition(datePeriod);// 自定义方法更新
-
+				qf.changeItemData();
 			}
 		}
-
 	}
+
+	@Override
+	public void setChange() {
+		// TODO Auto-generated method stub
+		System.out.println("activity set changed");
+		refreshChat();
+	}
+
+
+
 }

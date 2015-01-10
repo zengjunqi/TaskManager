@@ -12,9 +12,10 @@
         android:orientation="vertical" >
 
         <TextView
+            android:id="@+id/help_v"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="版本:1.0"
+            android:text="版本: 1.0"
             android:textColor="#90000000"
             android:textSize="18sp" />
 
@@ -22,14 +23,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:autoLink="email"
-            android:text="邮箱:zeng.jun.qi@qq.com"
+            android:text="邮箱: zeng.jun.qi@qq.com"
             android:textColor="#90000000"
             android:textSize="18sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="微信号:mandyzjq"
+            android:text="微信号: mandyzjq"
             android:textColor="#90000000"
             android:textSize="18sp" />
          
