@@ -87,4 +87,11 @@ public class AlarmUtils {
 		aManager.cancel(pi);
 	}
 
+	public void cancleAlarm(int id) {
+		Intent intent = new Intent(context, AlarmActivity.class); // 创建Intent对象
+		PendingIntent pi = PendingIntent.getActivity(context, id,
+				intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+		aManager.cancel(pi);
+	}
+	
 }

@@ -34,6 +34,7 @@ import com.zeng.yan.taskmanager.MainFragment.Mylistener;
 import com.zeng.yan.taskmanager.adapter.MySpnnerAdapter;
 import com.zeng.yan.taskmanager.bean.TaskDetails;
 import com.zeng.yan.taskmanager.db.TaskDBOperator;
+import com.zeng.yan.taskmanager.utils.AlarmUtils;
 import com.zeng.yan.taskmanager.utils.CalendarUtils;
 
 public class QueryFragment extends Fragment implements OnClickListener {
@@ -56,6 +57,7 @@ public class QueryFragment extends Fragment implements OnClickListener {
 	private int flag = 0;// 0为天查询,1为周查询,2为月查询
 	private TextView tvCondtion;
 	private DataChangelistener listener;
+
 	public interface DataChangelistener {
 		public void setChange();
 	}
@@ -70,9 +72,10 @@ public class QueryFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onAttach(Activity activity) {
-		listener=(DataChangelistener) activity;
+		listener = (DataChangelistener) activity;
 		super.onAttach(activity);
 	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -445,6 +448,11 @@ public class QueryFragment extends Fragment implements OnClickListener {
 																// 通知listview数据适配器更新
 																dapter.notifyDataSetChanged();
 																listener.setChange();
+																AlarmUtils utils = new AlarmUtils(
+																		getActivity());
+																utils.cancleAlarm(list
+																		.get(position)
+																		.get_id());
 															}
 														});
 												builder.setNegativeButton("取消",

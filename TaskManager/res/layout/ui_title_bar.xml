@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="50dp"
     android:background="@drawable/top1_bg"
-    android:padding="10dp" >
+    android:padding="5dp" >
 
     <ImageView
         android:id="@+id/top_iv1"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_alignParentLeft="true"
         android:background="@drawable/ic_launcher" />
 
@@ -24,8 +24,8 @@
 
     <ImageView
         android:id="@+id/top_iv2"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:background="@drawable/icon_add" />

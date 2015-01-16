@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.zeng.yan.taskmanager.AddTaskActivity;
 import com.zeng.yan.taskmanager.R;
 import com.zeng.yan.taskmanager.service.MyRemoteViewService;
+import com.zeng.yan.taskmanager.utils.AlarmUtils;
 import com.zeng.yan.taskmanager.utils.CalendarUtils;
 
 public class DailyWidget extends AppWidgetProvider {
@@ -115,6 +116,8 @@ public class DailyWidget extends AppWidgetProvider {
 			aManager.setRepeating(AlarmManager.RTC_WAKEUP,
 					System.currentTimeMillis(), 1000 * 60*60, pi);// *60*24
 
+			AlarmUtils alarmUtils = new AlarmUtils(context);
+			alarmUtils.setCycleDataAlarm();
 			// Intent gridIntent = new Intent();
 			// gridIntent.setAction(COLLECTION_VIEW_ACTION);
 			// gridIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,

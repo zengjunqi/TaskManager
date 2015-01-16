@@ -132,13 +132,11 @@ public class SplashActivity extends Activity {
 		alphaAnimation.setFillAfter(true);
 
 		rlLayout.setAnimation(alphaAnimation);
-		// installShortCut();
 
+		AlarmUtils alarmUtils = new AlarmUtils(this);
+		alarmUtils.setCycleDataAlarm();
 		boolean alarm = sp.getBoolean("alarm", false);
 		if (!alarm) {
-
-			AlarmUtils alarmUtils = new AlarmUtils(this);
-			alarmUtils.setCycleDataAlarm();
 			Editor editor = sp.edit();
 			editor.putBoolean("update", true);
 			editor.putBoolean("alarm", true);

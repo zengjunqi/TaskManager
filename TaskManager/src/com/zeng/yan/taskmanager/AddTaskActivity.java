@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,7 +53,8 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 	private OnDateSetListener changerListener;
 	DatePickerDialog datePickerDialog;
 	String timeString = "";
-
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	SimpleDateFormat dateFormat3 = new SimpleDateFormat("yyyy-MM-dd");
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -258,8 +260,6 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear,
 					int dayOfMonth) {
-				System.out.println("year" + year + "monthOfYear" + monthOfYear
-						+ "monthOfYear" + dayOfMonth);
 				int ccmonth = monthOfYear + 1;
 				String monthString = String.valueOf(ccmonth);
 				if (monthString.length() == 1) {
@@ -272,6 +272,20 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 				String selectDateString = year + "-" + monthString + "-"
 						+ dayString;
 				et_date.setText(selectDateString);
+				try {
+					long curDateTime=dateFormat3.parse(dateFormat3.format(new Date())).getTime();
+					//System.out.println(dateFormat3.parse(selectDateString).getTime()+"=="+curDateTime);
+					if (!"update".equals(oper) && dateFormat3.parse(selectDateString).getTime()<curDateTime) {
+						//System.out.println("ok");
+						sp_cycle.setSelection(0);
+						sp_cycle.setEnabled(false);
+					}else {
+						sp_cycle.setEnabled(true);
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			}
 		};
@@ -281,7 +295,7 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 	}
 
 	private TaskDetails getMyTask() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		
 		SimpleDateFormat dateFormat1 = new SimpleDateFormat("HH:mm");
 		TaskDetails taskDetails = new TaskDetails();
 		taskDetails.setContent(et_content.getText().toString());
@@ -333,12 +347,22 @@ public class AddTaskActivity extends Activity implements OnClickListener {
 
 		}
 		try {
+
 			Date dateFrom = dateFormat.parse(taskDetails.getDate() + " "
 					+ taskDetails.getStartTime());
 			Date dateTo = dateFormat.parse(taskDetails.getDate() + " "
 					+ taskDetails.getEndTime());
+			if (dateFrom.getTime() > dateTo.getTime()) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(dateTo);
+				calendar.add(Calendar.DATE, 1);// 把日期往后增加一天.整数往后推,负数往前移动
+				dateTo = calendar.getTime();
+			}
+
 			long diff = dateTo.getTime() - dateFrom.getTime();
 			int minute = (int) (diff / (1000 * 60));
+			System.out.println("minute" + minute);
+
 			taskDetails.setTime(minute);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
