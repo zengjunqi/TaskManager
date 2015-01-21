@@ -1,48 +1,57 @@
 package com.zeng.yan.taskmanager;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.zeng.yan.taskmanager.ui.SettingClickView;
 import com.zeng.yan.taskmanager.ui.SettingItem;
 
 public class SetFragment extends Fragment {
-	private SettingClickView backRestore,share,helper;
+	private SettingClickView backRestore, share, helper, setring;
 	private SettingItem update;
 	private SharedPreferences sp;
-@Override
-public View onCreateView(LayoutInflater inflater, ViewGroup container,
-		Bundle savedInstanceState) {
-	return inflater.inflate(R.layout.set_fragment, container,false);
-}
+	MediaPlayer player;
+	int which;
 
-@Override
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.set_fragment, container, false);
+	}
+
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		
-		backRestore=(SettingClickView) getActivity().findViewById(R.id.v_backup_restore);
+		sp = getActivity().getSharedPreferences("config",
+				getActivity().MODE_PRIVATE);
+		backRestore = (SettingClickView) getActivity().findViewById(
+				R.id.v_backup_restore);
 		backRestore.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent=new Intent(getActivity(),BackRestoreActivity.class);
+				Intent intent = new Intent(getActivity(),
+						BackRestoreActivity.class);
 				startActivity(intent);
 			}
 		});
-		
-		share=(SettingClickView) getActivity().findViewById(R.id.v_share);
+
+		share = (SettingClickView) getActivity().findViewById(R.id.v_share);
 		share.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -55,20 +64,97 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				startActivity(intent);
 			}
 		});
-		
-		helper=(SettingClickView) getActivity().findViewById(R.id.v_reback);
+
+		helper = (SettingClickView) getActivity().findViewById(R.id.v_reback);
 		helper.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent=new Intent(getActivity(),ReplyActivity.class);
+				Intent intent = new Intent(getActivity(), ReplyActivity.class);
 				startActivity(intent);
 			}
 		});
-		
-		update=(SettingItem) getActivity().findViewById(R.id.v_update);
-		sp =getActivity().getSharedPreferences("config",getActivity().MODE_PRIVATE);
+		setring = (SettingClickView) getActivity().findViewById(R.id.v_setring);
+		final String[] items = { "¡Â…˘1", "¡Â…˘2", "¡Â…˘3", "¡Â…˘4", "¡Â…˘5", "¡Â…˘6","¡Â…˘7", "¡Â…˘8", "¡Â…˘9", "¡Â…˘10", "¡Â…˘11" };
+		final int[] itemsId = { R.raw.app, R.raw.kaishi, R.raw.pingfan,
+				R.raw.shebude, R.raw.tianliang, R.raw.xinxiao, R.raw.haoting,
+				R.raw.jita, R.raw.niao, R.raw.nusheng, R.raw.miaohuat };
+		which = sp.getInt("which", 0);
+		System.out.println("which" + which);
+		if (which == -1) {
+			which = 0;
+		}
+		// player = MediaPlayer.create(getActivity(), itemsId[which]);
+		// player.setLooping(true);//
+		// player.setVolume(1.0f, 1.0f);
+
+		setring.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				// µØ≥ˆ“ª∏ˆ∂‘ª∞øÚ
+				AlertDialog.Builder builder = new Builder(getActivity());
+				builder.setTitle("ƒ÷÷”¡Â…˘…Ë÷√");
+				builder.setSingleChoiceItems(items, which,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int positon) {
+								if (player != null && player.isPlaying()) {
+
+									player.stop();
+									player = null;
+								}
+
+								// ±£¥Ê—°‘Ò≤Œ ˝
+								player = MediaPlayer.create(getActivity(),
+										itemsId[positon]);
+								player.setLooping(true);//
+								player.setVolume(1.0f, 1.0f);
+								player.start();
+
+								which = positon;
+								// »°œ˚∂‘ª∞øÚ
+								// dialog.dismiss();
+							}
+						});
+				builder.setPositiveButton("»∑∂®",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int positon) {
+								// TODO Auto-generated method stub
+								System.out.println("onClick which:" + which);
+								Editor editor = sp.edit();
+								editor.putInt("which", which);
+								editor.commit();
+								player.stop();
+								dialog.dismiss();
+							}
+						});
+				builder.setNegativeButton("»°œ˚",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								if (player.isPlaying()) {
+									player.stop();
+								}
+							}
+						});
+				AlertDialog dialog = builder.create();
+				dialog.setCancelable(false);
+				dialog.show();
+
+			}
+		});
+		update = (SettingItem) getActivity().findViewById(R.id.v_update);
 
 		boolean updateConfig = sp.getBoolean("update", false);
 		if (updateConfig) {
@@ -79,7 +165,7 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			update.setChecked(false);
 		}
 		update.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Editor editor = sp.edit();

@@ -21,6 +21,13 @@
         zengyan:rightivsrc="@drawable/icon_back"
         zengyan:titletext="备份与还原" >
     </com.zeng.yan.taskmanager.ui.SettingClickView>
+     <com.zeng.yan.taskmanager.ui.SettingClickView
+        android:id="@+id/v_setring"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        zengyan:rightivsrc="@drawable/icon_back"
+        zengyan:titletext="设置闹钟铃声" >
+    </com.zeng.yan.taskmanager.ui.SettingClickView>
 
     <com.zeng.yan.taskmanager.ui.SettingClickView
         android:id="@+id/v_share"
@@ -37,5 +44,7 @@
         zengyan:rightivsrc="@drawable/icon_back"
         zengyan:titletext="关于" >
     </com.zeng.yan.taskmanager.ui.SettingClickView>
+    
+       
 
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -14,9 +15,15 @@ public class AlarmActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		final int[] itemsId = { R.raw.app, R.raw.kaishi, R.raw.pingfan,
+				R.raw.shebude, R.raw.tianliang, R.raw.xinxiao, R.raw.haoting,
+				R.raw.jita, R.raw.niao, R.raw.nusheng, R.raw.miaohuat };
+		 SharedPreferences  sp =getSharedPreferences("config",
+							MODE_PRIVATE);
+		 int which = sp.getInt("which", 0);
 		Intent intent=getIntent();
 		String content=intent.getStringExtra("content");
-		final MediaPlayer player = MediaPlayer.create(this, R.raw.app);
+		final MediaPlayer player = MediaPlayer.create(this, itemsId[which]);
 		player.setLooping(true);//
 		player.setVolume(1.0f, 1.0f);
 		player.start();
