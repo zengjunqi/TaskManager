@@ -443,16 +443,17 @@ public class QueryFragment extends Fragment implements OnClickListener {
 																				.valueOf(list
 																						.get(position)
 																						.get_id()));
-																// 更新界面。
-																list.remove(position);
-																// 通知listview数据适配器更新
-																dapter.notifyDataSetChanged();
-																listener.setChange();
 																AlarmUtils utils = new AlarmUtils(
 																		getActivity());
 																utils.cancleAlarm(list
 																		.get(position)
 																		.get_id());
+																// 更新界面。
+																list.remove(position);
+																// 通知listview数据适配器更新
+																dapter.notifyDataSetChanged();
+																listener.setChange();
+																
 															}
 														});
 												builder.setNegativeButton("取消",

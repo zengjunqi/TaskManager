@@ -185,4 +185,11 @@ public class SetFragment extends Fragment {
 		});
 	}
 
+@Override
+public void onStop() {
+	if (player!=null&& player.isPlaying()) {
+		player.stop();
+	}
+	super.onStop();
+}
 }
